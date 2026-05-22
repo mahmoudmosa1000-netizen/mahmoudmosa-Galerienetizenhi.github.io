@@ -835,7 +835,9 @@ async function runAI(){
   document.getElementById('ai-meta').style.display='none';toast('AI analyzing…','ai');
   try{
     const resp=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:apiHeaders(),body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:1000,system:'You are an expert software developer. Respond in English, using structured Markdown.',messages:[{role:'user',content:userPrompt+'\n\n```'+curP.language.toLowerCase()+'\n'+curP.code+'\n```'}]})});
-    const data=await resp.json();const txt=data.content?.map(c=>c.text||'').join('')||'No response.';aiCache[key]=txt;showAIR(txt,false);
+    const data=await resp.json();
+    if(data.error){throw new Error(data.error.message||JSON.stringify(data.error))}
+    const txt=(data.content||[]).map(c=>c.text||'').join('')||'No response.';aiCache[key]=txt;showAIR(txt,false);
   }catch(err){res.className='ai-res';res.innerHTML='<div style="color:var(--rose)">Fehler: '+esc(err.message)+'</div>';toast('AI failed','err')}
 }
 function showAIR(txt,fromCache){
@@ -865,8 +867,17 @@ async function runAIReview(){
   const cxs=cx(code),cxc=cxC(cxs);const cxEl=document.getElementById('sc-cx-val');if(cxEl){cxEl.textContent=cxs;cxEl.style.color=cxc.c}
   try{
     const resp=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:apiHeaders(),body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:800,system:'You are a code review expert. Reply ONLY with valid JSON, no markdown blocks.',messages:[{role:'user',content:'Analyze this '+lang+' code. Reply as JSON:\n{"quality":"A/B/C/D/F","bugs":"none/minor/medium/critical","style":"A/B/C/D/F","verdict":"publish/review/fix","verdict_text":"Recommendation (1 sentence)","suggested_description":"What the code does (1-2 sentences)","suggested_tags":["tag1","tag2","tag3"],"strengths":["strength1","strength2"],"issues":["issue1"],"improvements":["improvement1"]}\n\nCode:\n'+code.slice(0,3000)}]})});
-    const data=await resp.json();const raw=(data.content||[]).map(c=>c.text||'').join('').trim();const result=JSON.parse(raw.replace(/^```json?\s*/,'').replace(/```\s*$/,'').trim());aiReviewData=result;showReviewResult(result);
-  }catch(err){if(ld)ld.style.display='none';if(ct){ct.style.display='block';ct.innerHTML='<div style="color:var(--rose)">KI nicht erreichbar: '+esc(err.message)+'</div><div style="font-size:.72rem;color:var(--mut);margin-top:.4rem">Du kannst trotzdem veröffentlichen.</div>'}toast('AI connection failed','err')}
+    const data=await resp.json();
+    // Handle API-level errors (wrong key, rate limit, etc.)
+    if(data.error){throw new Error(data.error.message||JSON.stringify(data.error))}
+    const raw=(data.content||[]).map(c=>c.text||'').join('').trim();
+    if(!raw){throw new Error('Empty response from API')}
+    // Robust JSON extraction: find first { and last } — ignores any markdown/prose around it
+    const jsonStart=raw.indexOf('{');const jsonEnd=raw.lastIndexOf('}');
+    if(jsonStart===-1||jsonEnd===-1){throw new Error('No JSON object found in response')}
+    const result=JSON.parse(raw.slice(jsonStart,jsonEnd+1));
+    aiReviewData=result;showReviewResult(result);
+  }catch(err){if(ld)ld.style.display='none';if(ct){ct.style.display='block';ct.innerHTML='<div style="color:var(--rose)">AI unavailable: '+esc(err.message)+'</div><div style="font-size:.72rem;color:var(--mut);margin-top:.4rem">Check your API key (🔑) or try again. You can still publish.</div>'}toast('AI connection failed','err')}
 }
 function showReviewResult(r){
   const ld=document.getElementById('ai-review-loading'),ct=document.getElementById('ai-review-content'),vd=document.getElementById('ai-verdict'),af=document.getElementById('ai-autofill-preview');if(ld)ld.style.display='none';
