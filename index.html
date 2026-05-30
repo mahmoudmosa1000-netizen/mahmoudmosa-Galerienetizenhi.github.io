@@ -344,8 +344,8 @@ pre{margin:0;padding:1.25rem 1.25rem 3rem;font-family:var(--fc);font-size:.76rem
     <div class="vtog"><button class="vt on" id="vg" onclick="setView('grid')" title="Grid (G)">⊞</button><button class="vt" id="vl" onclick="setView('list')" title="Liste (L)">☰</button></div>
     <button class="btn btn-ghost btn-sm" onclick="toggleDash()" id="dash-btn">◈ Stats</button>
     <button class="btn btn-ghost btn-sm" onclick="showModal('import-modal')">⬇</button>
-    <button class="btn btn-ghost btn-sm" onclick="exportAll()">⬆</button>
-    <button class="btn btn-ghost btn-sm" onclick="openApiKeyModal()" id="api-key-btn" title="API Key">🔑</button><button class="btn btn-ghost btn-sm btn-ico" onclick="showModal('sc-modal')">?</button>
+    <button class="btn btn-ghost btn-sm" onclick="exportAll()" title="Export JSON">⬆ JSON</button><button class="btn btn-ghost btn-sm" onclick="exportHTML()" title="Export read-only HTML gallery">⬇ HTML</button>
+    <button class="btn btn-ghost btn-sm btn-ico" onclick="showModal('sc-modal')">?</button>
     <button class="btn btn-primary" onclick="openDrw(null)">＋ Project</button>
   </div>
 </nav>
@@ -401,7 +401,7 @@ pre{margin:0;padding:1.25rem 1.25rem 3rem;font-family:var(--fc);font-size:.76rem
       <div class="panel" id="pchart"><div class="chart-panel" id="chart-panel"></div></div>
       <div class="panel" id="pnote"><div style="display:flex;flex-direction:column;flex:1;overflow:hidden"><div class="notes-bar"><span style="font-size:.66rem;color:var(--mut2)">✏ Notes</span><div style="flex:1"></div><span style="font-size:.59rem;color:var(--mut)" id="note-st"></span></div><textarea class="notes-ta" id="notes-ta" placeholder="Gedanken, TODOs, Referenzen…" oninput="saveNote()"></textarea></div></div>
       <div class="panel" id="pstats"><div class="sp" id="dstats"></div></div>
-      <div class="panel" id="pai"><div class="aip"><div class="ai-presets" id="ai-presets"></div><div class="ai-bar"><input id="ai-input" placeholder="Ask anything about the code…" onkeydown="if(event.key==='Enter')runAI()"><button class="btn btn-sm" style="background:rgba(168,85,247,.14);border-color:rgba(168,85,247,.28);color:#c4b5fd" onclick="runAI()">✦</button></div><div class="ai-res empty" id="ai-res"><div><div style="font-size:2rem;opacity:.16;margin-bottom:.48rem">✦</div><span style="font-size:.74rem">Choose a template or ask your own question</span></div></div><div class="ai-meta" id="ai-meta" style="display:none"><span class="ai-metadot"></span><span id="ai-mt" style="font-size:.59rem;color:var(--mut)"></span></div></div></div>
+      <div class="panel" id="pai"><div class="aip"><div class="ai-presets" id="ai-presets"></div><div class="ai-bar"><input id="ai-input" placeholder="e.g. "Find bugs", "Explain", "Big-O"…" onkeydown="if(event.key==='Enter')runAI()"><button class="btn btn-sm" style="background:rgba(168,85,247,.14);border-color:rgba(168,85,247,.28);color:#c4b5fd" onclick="runAI()">✦</button></div><div class="ai-res empty" id="ai-res"><div><div style="font-size:2rem;opacity:.16;margin-bottom:.48rem">✦</div><span style="font-size:.74rem">Choose an analysis type or ask about the code</span></div></div><div class="ai-meta" id="ai-meta" style="display:none"><span class="ai-metadot"></span><span id="ai-mt" style="font-size:.59rem;color:var(--mut)"></span></div></div></div>
     </div>
   </div>
 </div>
@@ -429,6 +429,7 @@ pre{margin:0;padding:1.25rem 1.25rem 3rem;font-family:var(--fc);font-size:.76rem
       <div id="preview-type-hint" style="display:none;padding:.55rem .75rem;border-radius:8px;border:1px solid;font-size:.73rem;margin-top:-.2rem"></div>
     </div>
     <div id="drw-step2" style="display:none;flex:1;overflow-y:auto;padding:1.1rem 1.4rem;flex-direction:column;gap:.9rem">
+      <div style="display:inline-flex;align-items:center;gap:.4rem;font-size:.62rem;color:#4ade80;background:rgba(74,222,128,.08);border:1px solid rgba(74,222,128,.22);border-radius:99px;padding:.18rem .62rem;margin-bottom:.5rem" id="local-analysis-badge">⚡ Instant local analysis — no API needed</div>
       <div id="ai-score-grid" style="display:grid;grid-template-columns:repeat(4,1fr);gap:.6rem">
         <div class="ai-score-card"><div class="asc-icon">✦</div><div class="asc-val" id="sc-q-val">–</div><div class="asc-lbl">Quality</div></div>
         <div class="ai-score-card"><div class="asc-icon">⬟</div><div class="asc-val" id="sc-cx-val">–</div><div class="asc-lbl">Complexity</div></div>
@@ -440,7 +441,7 @@ pre{margin:0;padding:1.25rem 1.25rem 3rem;font-family:var(--fc);font-size:.76rem
         <div id="verdict-text" style="font-size:.76rem;color:var(--txt2);line-height:1.6"></div>
       </div>
       <div id="ai-review-body" style="background:rgba(255,255,255,.02);border:1px solid var(--bdr);border-radius:8px;padding:1rem;font-size:.78rem;line-height:1.72;color:var(--txt2);min-height:120px">
-        <div id="ai-review-loading" style="display:flex;align-items:center;gap:.6rem;justify-content:center;padding:1.5rem 0"><div style="width:22px;height:22px;border:2px solid rgba(168,85,247,.2);border-top-color:var(--purple);border-radius:50%;animation:spin .8s linear infinite"></div><span style="font-size:.74rem;color:var(--mut);font-family:var(--fc)">Claude is analyzing your code…</span></div>
+        <div id="ai-review-loading" style="display:flex;align-items:center;gap:.6rem;justify-content:center;padding:1.5rem 0"><div style="width:22px;height:22px;border:2px solid rgba(168,85,247,.2);border-top-color:var(--purple);border-radius:50%;animation:spin .8s linear infinite"></div><span style="font-size:.74rem;color:var(--mut);font-family:var(--fc)">Analyzing your code locally…</span></div>
         <div id="ai-review-content" style="display:none"></div>
       </div>
       <div id="ai-autofill-preview" style="display:none;background:rgba(59,130,246,.05);border:1px solid rgba(59,130,246,.2);border-radius:8px;padding:.8rem 1rem">
@@ -464,53 +465,607 @@ pre{margin:0;padding:1.25rem 1.25rem 3rem;font-family:var(--fc);font-size:.76rem
 </div>
 <div class="modal-bg" id="confirm-modal"><div class="modal"><div class="modal-head"><h3>Delete?</h3></div><div class="modal-body"><p id="cfmsg"></p></div><div class="modal-foot"><button class="btn btn-ghost" onclick="hideModal('confirm-modal')">Cancel</button><button class="btn btn-danger" id="cfok">Löschen</button></div></div></div>
 <div class="modal-bg" id="sc-modal" onclick="if(event.target===this)hideModal('sc-modal')"><div class="modal" style="max-width:500px"><div class="modal-head" style="display:flex;align-items:center;justify-content:space-between"><h3>Keyboard Shortcuts</h3><button class="btn btn-ico btn-ghost" onclick="hideModal('sc-modal')">✕</button></div><div class="modal-body"><div class="sc-grid"><div class="sc-row"><span class="sc-label">New Project</span><div class="sc-keys"><span class="kbd">⌘</span><span class="kbd">N</span></div></div><div class="sc-row"><span class="sc-label">Search</span><div class="sc-keys"><span class="kbd">⌘</span><span class="kbd">K</span></div></div><div class="sc-row"><span class="sc-label">Close</span><div class="sc-keys"><span class="kbd">Esc</span></div></div><div class="sc-row"><span class="sc-label">Grid / List</span><div class="sc-keys"><span class="kbd">G</span><span class="kbd">L</span></div></div><div class="sc-row"><span class="sc-label">Navigate</span><div class="sc-keys"><span class="kbd">←→↑↓</span></div></div><div class="sc-row"><span class="sc-label">Open</span><div class="sc-keys"><span class="kbd">↵</span></div></div><div class="sc-row"><span class="sc-label">Stats</span><div class="sc-keys"><span class="kbd">D</span></div></div><div class="sc-row"><span class="sc-label">Copy Code</span><div class="sc-keys"><span class="kbd">⌘C</span></div></div><div class="sc-row"><span class="sc-label">Run JS</span><div class="sc-keys"><span class="kbd">⌘↵</span></div></div><div class="sc-row"><span class="sc-label">Fullscreen</span><div class="sc-keys"><span class="kbd">⌘⇧F</span></div></div><div class="sc-row"><span class="sc-label">Favorites</span><div class="sc-keys"><span class="kbd">F</span></div></div><div class="sc-row"><span class="sc-label">Export</span><div class="sc-keys"><span class="kbd">⌘E</span></div></div></div></div></div></div>
-<div class="modal-bg" id="import-modal" onclick="if(event.target===this)hideModal('import-modal')"><div class="modal"><div class="modal-head" style="display:flex;align-items:center;justify-content:space-between"><h3>Import</h3><button class="btn btn-ico btn-ghost" onclick="hideModal('import-modal')">✕</button></div><div class="modal-body"><p>Import or paste a JSON file.</p><label class="drop-zone" id="drop-zone" ondragover="dragOver(event)" ondragleave="dragLeave()" ondrop="dropFile(event)" onclick="document.getElementById('file-input').click()"><div style="font-size:1.1rem">⬇</div><div style="margin-top:.2rem;font-size:.75rem">Drop file or click</div><input type="file" id="file-input" accept=".json" onchange="importFile(event)"></label><div style="margin-top:.62rem" class="field"><label>Paste JSON</label><textarea id="import-json" style="min-height:70px;font-size:.7rem" placeholder='[{"name":"...","code":"..."}]'></textarea></div></div><div class="modal-foot"><button class="btn btn-ghost" onclick="hideModal('import-modal')">Cancel</button><button class="btn btn-primary" onclick="importJSON()">Import</button></div></div></div>
+<div class="modal-bg" id="import-modal" onclick="if(event.target===this)hideModal('import-modal')"><div class="modal"><div class="modal-head" style="display:flex;align-items:center;justify-content:space-between"><h3>Import</h3><button class="btn btn-ico btn-ghost" onclick="hideModal('import-modal')">✕</button></div><div class="modal-body"><p>Import a <strong>JSON</strong> or an exported <strong>HTML gallery</strong> file — both work.</p><label class="drop-zone" id="drop-zone" ondragover="dragOver(event)" ondragleave="dragLeave()" ondrop="dropFile(event)" onclick="document.getElementById('file-input').click()"><div style="font-size:1.1rem">⬇</div><div style="margin-top:.2rem;font-size:.75rem">Drop file or click</div><div style="font-size:.65rem;margin-top:.12rem;color:var(--mut)">Accepts .json or .html export</div><input type="file" id="file-input" accept=".json,.html" onchange="importFile(event)"></label><div style="margin-top:.62rem" class="field"><label>Paste JSON</label><textarea id="import-json" style="min-height:70px;font-size:.7rem" placeholder='[{"name":"...","code":"..."}]'></textarea></div></div><div class="modal-foot"><button class="btn btn-ghost" onclick="hideModal('import-modal')">Cancel</button><button class="btn btn-primary" onclick="importJSON()">Import</button></div></div></div>
 <div class="modal-bg" id="share-modal" onclick="if(event.target===this)hideModal('share-modal')"><div class="modal"><div class="modal-head" style="display:flex;align-items:center;justify-content:space-between"><h3>Share</h3><button class="btn btn-ico btn-ghost" onclick="hideModal('share-modal')">✕</button></div><div class="modal-body"><p>The URL contains the complete project.</p><div class="qr-wrap"><canvas id="qr-canvas" width="120" height="120"></canvas></div><div class="share-url" id="share-url-text"></div></div><div class="modal-foot"><button class="btn btn-ghost" onclick="hideModal('share-modal')">Close</button><button class="btn btn-primary" onclick="copyShareUrl()">⎘ Copy URL</button></div></div></div>
 <div class="modal-bg" id="coll-modal" onclick="if(event.target===this)hideModal('coll-modal')"><div class="modal"><div class="modal-head" style="display:flex;align-items:center;justify-content:space-between"><h3>New Collection</h3><button class="btn btn-ico btn-ghost" onclick="hideModal('coll-modal')">✕</button></div><div class="modal-body"><div style="display:flex;flex-direction:column;gap:.78rem"><div class="field"><label>Name *</label><input id="coll-name" placeholder="e.g. Algorithms"></div><div class="field"><label>Color</label><div class="swts" id="coll-swts"></div></div></div></div><div class="modal-foot"><button class="btn btn-ghost" onclick="hideModal('coll-modal')">Cancel</button><button class="btn btn-primary" onclick="addColl()">Create</button></div></div></div>
 
-<div class="modal-bg" id="apikey-modal" onclick="if(event.target===this)hideModal('apikey-modal')">
-  <div class="modal">
-    <div class="modal-head" style="display:flex;align-items:center;justify-content:space-between">
-      <h3>Anthropic API Key</h3>
-      <button class="btn btn-ico btn-ghost" onclick="hideModal('apikey-modal')">✕</button>
-    </div>
-    <div class="modal-body">
-      <p>Enter your Anthropic API key to enable AI features. Your key is stored locally in the browser only.</p>
-      <div class="field">
-        <label>API Key</label>
-        <input id="apikey-input" type="password" placeholder="sk-ant-…" autocomplete="off" style="font-family:var(--fc);font-size:.76rem">
-      </div>
-      <p style="margin-top:.6rem;font-size:.68rem;color:var(--mut)">
-        Get your key at <a href="https://console.anthropic.com" target="_blank" style="color:var(--blue)">console.anthropic.com</a>
-      </p>
-    </div>
-    <div class="modal-foot">
-      <button class="btn btn-ghost" onclick="hideModal('apikey-modal')">Cancel</button>
-      <button class="btn btn-danger btn-sm" onclick="setApiKey('');hideModal('apikey-modal')">Clear</button>
-      <button class="btn btn-primary" onclick="setApiKey(document.getElementById('apikey-input').value);hideModal('apikey-modal')">Save Key</button>
-    </div>
-  </div>
-</div>
 <div id="toasts"></div>
 <script>
 const SK='codex_v9';
 
-const API_KEY_SK='codex_api_key';
-function getApiKey(){return localStorage.getItem(API_KEY_SK)||''}
-function setApiKey(k){if(k){localStorage.setItem(API_KEY_SK,k.trim());toast('API key saved ✓','ok')}else{localStorage.removeItem(API_KEY_SK);toast('API key cleared','info')}}
-function apiHeaders(){return{'Content-Type':'application/json','x-api-key':getApiKey(),'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'}}
-function checkApiKey(){if(!getApiKey()){showModal('apikey-modal');return false}return true}
+function apiHeaders(){return{'Content-Type':'application/json'}}
+
+// ══════════════════════════════════════════
+// LOCAL AI ENGINE (no API needed)
+// ══════════════════════════════════════════
+const LocalAI = {
+
+  // ── ENTRY POINT: routes prompt to correct handler ──────────
+  analyze(code, lang, prompt) {
+    const p = prompt.toLowerCase();
+    const s = cst(code), a = ana(code, lang), cxs = cx(code);
+    if (p.includes('explain') || p.includes('what') || p.includes('how'))
+      return this.explain(code, lang, s, a, cxs);
+    if (p.includes('bug') || p.includes('error') || p.includes('issue') || p.includes('fix'))
+      return this.bugs(code, lang, s, a);
+    if (p.includes('big-o') || p.includes('complex') || p.includes('o(n') || p.includes('time'))
+      return this.complexity(code, lang, a, cxs);
+    if (p.includes('test') || p.includes('unit'))
+      return this.tests(code, lang, a);
+    if (p.includes('doc') || p.includes('comment') || p.includes('api'))
+      return this.docs(code, lang, a);
+    if (p.includes('refactor') || p.includes('clean') || p.includes('restructur'))
+      return this.refactor(code, lang, s, a);
+    if (p.includes('improve') || p.includes('better') || p.includes('optim') || p.includes('performance'))
+      return this.improve(code, lang, s, a, cxs);
+    return this.explain(code, lang, s, a, cxs);
+  },
+
+  // ── EXPLAIN ────────────────────────────────────────────────
+  explain(code, lang, s, a, cxs) {
+    const lines = code.split('\n');
+    const imports = a.im.map(i => i.t).join(', ');
+    const fns = a.fn.map(f => `\`${f.n}()\``).join(', ');
+    const cls = a.cl.map(c => `\`${c.n}\``).join(', ');
+    const cc = cxC(cxs);
+
+    let out = `## What this ${lang} code does\n\n`;
+
+    // Purpose detection
+    const codeLow = code.toLowerCase();
+    const purposes = [];
+    if (/\b(sort|quicksort|mergesort|bubble|insertion)\b/i.test(code)) purposes.push('a **sorting algorithm**');
+    if (/\b(fibonacci|fib)\b/i.test(code)) purposes.push('the **Fibonacci sequence**');
+    if (/\b(search|binary.search|linear.search)\b/i.test(code)) purposes.push('a **search algorithm**');
+    if (/\b(hash|hashmap|dictionary|map)\b/i.test(code)) purposes.push('a **hash map / dictionary**');
+    if (/\b(tree|node|leaf|root|bst)\b/i.test(code)) purposes.push('a **tree data structure**');
+    if (/\b(graph|vertex|edge|dijkstra|bfs|dfs)\b/i.test(code)) purposes.push('a **graph algorithm**');
+    if (/\b(neural|layer|backprop|gradient|weight)\b/i.test(code)) purposes.push('a **neural network layer**');
+    if (/canvas|requestAnimationFrame|ctx\./i.test(code)) purposes.push('a **canvas animation**');
+    if (/\b(class|extends|prototype)\b/.test(code) && a.cl.length > 0) purposes.push('**object-oriented code**');
+    if (/\b(fetch|axios|xhr|http|request|response)\b/i.test(code)) purposes.push('**HTTP requests / API calls**');
+    if (/\b(regex|regexp|match|replace)\b/i.test(code)) purposes.push('**regular expression processing**');
+    if (/\b(encrypt|decrypt|hash|sha|md5|aes)\b/i.test(code)) purposes.push('**cryptography**');
+
+    if (purposes.length > 0) {
+      out += `This code implements ${purposes.join(' and ')}.\n\n`;
+    } else {
+      out += `This is a ${lang} module with **${s.tot} lines** of code.\n\n`;
+    }
+
+    // Structure
+    out += `## Structure\n\n`;
+    out += `- **${s.tot} total lines** (${s.ne} code, ${s.cm} comments, ${s.tot - s.ne - s.cm} blank)\n`;
+    if (a.fn.length > 0) out += `- **Functions:** ${fns}\n`;
+    if (a.cl.length > 0) out += `- **Classes:** ${cls}\n`;
+    if (a.co.length > 0) out += `- **Constants:** ${a.co.map(c => `\`${c.n}\``).join(', ')}\n`;
+    if (imports) out += `- **Imports:** ${imports}\n`;
+    out += `- **Complexity:** ${cxs}/100 — ${cc.l}\n\n`;
+
+    // Function explanations
+    if (a.fn.length > 0) {
+      out += `## Key Functions\n\n`;
+      a.fn.slice(0, 6).forEach(fn => {
+        const fnLines = lines.slice(fn.l - 1, fn.l + 8);
+        const hasReturn = fnLines.some(l => /\breturn\b/.test(l));
+        const hasAsync = fnLines.some(l => /\basync\b/.test(l));
+        const hasLoop = fnLines.some(l => /\b(for|while|forEach|map)\b/.test(l));
+        const hasRecursion = fnLines.some(l => new RegExp(`\\b${fn.n}\\s*\\(`).test(l));
+        const traits = [];
+        if (hasAsync) traits.push('async');
+        if (hasLoop) traits.push('iterative');
+        if (hasRecursion) traits.push('recursive');
+        if (hasReturn) traits.push('returns a value');
+        out += `**\`${fn.n}()\`** (line ${fn.l})`;
+        if (traits.length > 0) out += ` — ${traits.join(', ')}`;
+        out += `\n`;
+      });
+      if (a.fn.length > 6) out += `\n...and ${a.fn.length - 6} more functions.\n`;
+      out += '\n';
+    }
+
+    // How it works (pattern-based)
+    out += `## How it works\n\n`;
+    if (/\brecursion\b|function\s+\w+[^{]+\{[\s\S]*?\1\s*\(/i.test(code) ||
+        a.fn.some(f => code.slice(code.indexOf(`function ${f.n}`)).slice(0, 300).includes(f.n + '('))) {
+      out += `- Uses **recursion** — functions call themselves\n`;
+    }
+    if (/\b(for|while|forEach)\b/.test(code)) out += `- Uses **iteration** (loops)\n`;
+    if (/\b(map|filter|reduce)\b/.test(code)) out += `- Uses **functional programming** patterns\n`;
+    if (/\basync\b|\bawait\b/.test(code)) out += `- Uses **async/await** for non-blocking operations\n`;
+    if (/\btry\b[\s\S]*?\bcatch\b/.test(code)) out += `- Has **error handling** (try/catch)\n`;
+    if (/\bconst\b/.test(code) && !/\bvar\b/.test(code)) out += `- Uses **modern JS** (const/let, no var)\n`;
+    if (/=>/g.test(code)) out += `- Uses **arrow functions**\n`;
+
+    return out;
+  },
+
+  // ── BUG DETECTION ──────────────────────────────────────────
+  bugs(code, lang, s, a) {
+    const lines = code.split('\n');
+    const issues = [];
+
+    // Universal patterns
+    lines.forEach((line, i) => {
+      const n = i + 1, t = line.trim();
+      if (/\/\/\s*(TODO|FIXME|HACK|BUG|XXX)/i.test(t))
+        issues.push({ sev: 'warn', line: n, msg: `**TODO/FIXME** marker — unfinished code` });
+      if (t.length > 200)
+        issues.push({ sev: 'info', line: n, msg: `Line is very long (${t.length} chars) — hard to read` });
+    });
+
+    // JavaScript / TypeScript
+    if (['JavaScript', 'TypeScript'].includes(lang)) {
+      lines.forEach((line, i) => {
+        const n = i + 1, t = line.trim();
+        if (/[^=!<>]=[^=>]/.test(t) && /==[^=]/.test(t))
+          issues.push({ sev: 'err', line: n, msg: `Loose equality \`==\` — use \`===\` for strict comparison` });
+        if (/\bvar\s+/.test(t))
+          issues.push({ sev: 'warn', line: n, msg: `\`var\` is function-scoped and hoisted — use \`const\` or \`let\`` });
+        if (/console\.log/.test(t))
+          issues.push({ sev: 'info', line: n, msg: `\`console.log()\` debug statement — remove before production` });
+        if (/catch\s*\([^)]*\)\s*\{\s*\}/.test(t))
+          issues.push({ sev: 'err', line: n, msg: `Empty \`catch\` block — errors are silently swallowed` });
+        if (/\bnew Array\(/.test(t))
+          issues.push({ sev: 'info', line: n, msg: `\`new Array()\` can be confusing — prefer \`[]\` literal` });
+        if (/==(null|undefined)/.test(t) && !/===/g.test(t))
+          issues.push({ sev: 'warn', line: n, msg: `Null check with \`==\` — intentional? Use \`=== null\`` });
+        if (/document\.write\b/.test(t))
+          issues.push({ sev: 'err', line: n, msg: `\`document.write()\` is dangerous and deprecated` });
+        if (/\beval\s*\(/.test(t))
+          issues.push({ sev: 'err', line: n, msg: `\`eval()\` is a security risk — avoid it` });
+        if (/\bsetTimeout\s*\(\s*['"]/.test(t))
+          issues.push({ sev: 'err', line: n, msg: `\`setTimeout\` with string argument — use a function instead` });
+      });
+      if (!code.includes('use strict') && lang === 'JavaScript' && !code.includes('import '))
+        issues.push({ sev: 'info', line: 1, msg: `Consider adding \`'use strict';\` for safer JS` });
+    }
+
+    // Python
+    if (lang === 'Python') {
+      lines.forEach((line, i) => {
+        const n = i + 1, t = line.trim();
+        if (/^except\s*:/.test(t))
+          issues.push({ sev: 'err', line: n, msg: `Bare \`except:\` catches everything including \`KeyboardInterrupt\`` });
+        if (/^except\s+Exception\s*:/.test(t))
+          issues.push({ sev: 'warn', line: n, msg: `\`except Exception\` is very broad — be more specific` });
+        if (/\bprint\s*\(/.test(t))
+          issues.push({ sev: 'info', line: n, msg: `\`print()\` debug statement — use \`logging\` in production` });
+        if (/\bl\b\s*=|\bO\b\s*=|\bI\b\s*=/.test(t))
+          issues.push({ sev: 'warn', line: n, msg: `Variable name \`l\`, \`O\` or \`I\` — easily confused with 1/0` });
+        if (/\btype\s*\(/.test(t) && /==/.test(t))
+          issues.push({ sev: 'warn', line: n, msg: `Use \`isinstance()\` instead of comparing \`type()\`` });
+      });
+    }
+
+    // Rust
+    if (lang === 'Rust') {
+      lines.forEach((line, i) => {
+        const n = i + 1, t = line.trim();
+        if (/\.unwrap\(\)/.test(t))
+          issues.push({ sev: 'warn', line: n, msg: `\`.unwrap()\` will panic on \`None\`/\`Err\` — use \`?\` or match` });
+        if (/\.expect\(/.test(t))
+          issues.push({ sev: 'info', line: n, msg: `\`.expect()\` panics on error — handle \`Result\` properly in production` });
+        if (/\bclone\(\)/.test(t))
+          issues.push({ sev: 'info', line: n, msg: `\`.clone()\` found — check if borrowing is possible instead` });
+      });
+    }
+
+    // CSS
+    if (lang === 'CSS') {
+      lines.forEach((line, i) => {
+        const n = i + 1, t = line.trim();
+        if (/!important/.test(t))
+          issues.push({ sev: 'warn', line: n, msg: `\`!important\` overrides cascade — use specificity instead` });
+        if (/color:\s*#[0-9a-f]{3,6}/.test(t) && !/var\(/.test(t))
+          issues.push({ sev: 'info', line: n, msg: `Hardcoded color — consider using CSS custom properties (--var)` });
+      });
+    }
+
+    // Complexity warning
+    const cxs = cx(code);
+    if (cxs > 75)
+      issues.push({ sev: 'warn', line: 0, msg: `High complexity score (${cxs}/100) — consider splitting into smaller functions` });
+
+    // Missing return
+    if (['JavaScript', 'TypeScript'].includes(lang)) {
+      a.fn.forEach(fn => {
+        const fnCode = code.slice(code.indexOf(`function ${fn.n}`)).slice(0, 400);
+        if (!/\breturn\b/.test(fnCode) && !/=>\s*\{/.test(fnCode))
+          issues.push({ sev: 'info', line: fn.l, msg: `\`${fn.n}()\` has no return statement — returns \`undefined\`` });
+      });
+    }
+
+    if (issues.length === 0) {
+      return `## Bug Analysis\n\n✅ **No obvious issues detected!**\n\nThe code looks clean. Run unit tests to verify edge cases.\n\n**Tips for robustness:**\n- Add input validation\n- Test with null/undefined inputs\n- Check boundary conditions`;
+    }
+
+    const errors = issues.filter(i => i.sev === 'err');
+    const warns = issues.filter(i => i.sev === 'warn');
+    const infos = issues.filter(i => i.sev === 'info');
+
+    let out = `## Bug Analysis\n\nFound **${issues.length} issue${issues.length !== 1 ? 's' : ''}** (${errors.length} errors, ${warns.length} warnings, ${infos.length} info)\n\n`;
+
+    if (errors.length > 0) {
+      out += `### 🔴 Errors\n`;
+      errors.forEach(i => { out += `- **Line ${i.line || '?'}:** ${i.msg}\n`; });
+      out += '\n';
+    }
+    if (warns.length > 0) {
+      out += `### 🟡 Warnings\n`;
+      warns.forEach(i => { out += `- **Line ${i.line || '?'}:** ${i.msg}\n`; });
+      out += '\n';
+    }
+    if (infos.length > 0) {
+      out += `### 🔵 Info\n`;
+      infos.forEach(i => { out += `- **Line ${i.line || '?'}:** ${i.msg}\n`; });
+    }
+    return out;
+  },
+
+  // ── COMPLEXITY ANALYSIS ────────────────────────────────────
+  complexity(code, lang, a, cxs) {
+    const cc = cxC(cxs);
+    let out = `## Big-O Complexity Analysis\n\n`;
+    out += `**Overall complexity score:** ${cxs}/100 — ${cc.l}\n\n`;
+
+    // Pattern-based Big-O detection
+    const hasNestedLoop = /for[\s\S]{0,200}for/.test(code) || /while[\s\S]{0,200}while/.test(code);
+    const hasSingleLoop = /\b(for|while|forEach|map|filter|reduce)\b/.test(code);
+    const hasRecursion = a.fn.some(f => {
+      const idx = code.indexOf(f.n + '(');
+      if (idx < 0) return false;
+      const fnBody = code.slice(idx, idx + 500);
+      return (fnBody.match(new RegExp(f.n + '\\s*\\(', 'g')) || []).length > 1;
+    });
+    const hasSort = /\b(sort|quicksort|mergesort|heapsort)\b/i.test(code);
+    const hasBinarySearch = /\bbinary.?search\b/i.test(code) || /\bmid\s*=/.test(code);
+    const hasHashMap = /\b(Map|Set|{}\s*;|Object\.keys)\b/.test(code) || /\bdict\b/.test(code);
+
+    out += `### Time Complexity\n\n`;
+    if (hasNestedLoop) {
+      out += `- **O(n²)** — nested loops detected\n`;
+      out += `  - Each iteration runs another full iteration → quadratic growth\n`;
+    } else if (hasRecursion && hasSort) {
+      out += `- **O(n log n)** — recursive sort detected\n`;
+      out += `  - Divide-and-conquer strategy → log n recursion levels × n work\n`;
+    } else if (hasBinarySearch) {
+      out += `- **O(log n)** — binary search pattern detected\n`;
+      out += `  - Halves the search space each step\n`;
+    } else if (hasRecursion) {
+      out += `- **O(n) to O(2ⁿ)** — recursion detected\n`;
+      out += `  - Depends on branching: linear (tail recursion) to exponential (naive fibonacci)\n`;
+    } else if (hasSingleLoop) {
+      out += `- **O(n)** — single loop / iteration detected\n`;
+      out += `  - Processes each element once → linear growth\n`;
+    } else if (hasHashMap) {
+      out += `- **O(1)** average — hash map lookups\n`;
+      out += `  - Hash maps provide constant-time average access\n`;
+    } else {
+      out += `- **O(1)** — no loops or recursion detected\n`;
+      out += `  - Constant time: runs the same regardless of input size\n`;
+    }
+
+    out += `\n### Space Complexity\n\n`;
+    const hasExtraArray = /\[\]|\bnew Array\b|\.push\(/.test(code);
+    const hasRecursiveStack = hasRecursion;
+    if (hasRecursiveStack) {
+      out += `- **O(n)** — recursion uses call stack proportional to input depth\n`;
+    } else if (hasExtraArray) {
+      out += `- **O(n)** — creates new arrays proportional to input size\n`;
+    } else {
+      out += `- **O(1)** — no extra data structures allocated\n`;
+    }
+
+    if (a.fn.length > 0) {
+      out += `\n### Per-Function Breakdown\n\n`;
+      a.fn.slice(0, 5).forEach(fn => {
+        const fnCode = code.slice(
+          code.indexOf(fn.n),
+          code.indexOf(fn.n) + 500
+        );
+        const nested = /for[\s\S]{0,100}for/.test(fnCode);
+        const loop = /\b(for|while|forEach|map)\b/.test(fnCode);
+        const recur = (fnCode.match(new RegExp(fn.n + '\\s*\\(', 'g')) || []).length > 1;
+        const bigO = nested ? 'O(n²)' : recur ? 'O(n)' : loop ? 'O(n)' : 'O(1)';
+        out += `- \`${fn.n}()\` → **${bigO}**\n`;
+      });
+    }
+
+    out += `\n### Optimization Tips\n\n`;
+    if (hasNestedLoop)
+      out += `- Consider using a hash map to reduce O(n²) → O(n)\n`;
+    if (hasRecursion && !code.includes('memo') && !code.includes('cache'))
+      out += `- Add **memoization** to avoid repeated recursive calls\n`;
+    if (hasSingleLoop && hasSort)
+      out += `- If data is nearly sorted, **insertion sort** can be O(n)\n`;
+
+    return out;
+  },
+
+  // ── IMPROVEMENT SUGGESTIONS ────────────────────────────────
+  improve(code, lang, s, a, cxs) {
+    const suggestions = [];
+    const cc = cxC(cxs);
+
+    let out = `## Improvement Suggestions\n\n`;
+    out += `Current state: **${s.tot} lines**, complexity **${cxs}/100** (${cc.l}), **${a.fn.length} functions**\n\n`;
+
+    // Performance
+    out += `### ⚡ Performance\n`;
+    if (/\.forEach[\s\S]{0,50}\.push\(/.test(code))
+      out += `- Replace \`.forEach() + .push()\` with \`.map()\` — more idiomatic and slightly faster\n`;
+    if (/for\s*\(let i=0[\s\S]{0,100}\.length/.test(code))
+      out += `- Cache array length: \`const len = arr.length\` outside the loop\n`;
+    if (code.split('document.querySelector').length > 3)
+      out += `- Cache DOM queries in variables — querying the DOM repeatedly is slow\n`;
+    if (/\+\s*['"]|['"]\s*\+/.test(code) && lang !== 'Python')
+      out += `- Use template literals \`\${var}\` instead of string concatenation\n`;
+    if (suggestions.length === 0 && cxs < 40)
+      out += `- Performance looks good! No obvious bottlenecks.\n`;
+
+    // Readability
+    out += `\n### 📖 Readability\n`;
+    if (s.cm / s.tot < 0.08 && s.tot > 15)
+      out += `- Add comments to explain **why**, not just **what** the code does\n`;
+    if (s.al > 80)
+      out += `- Shorten long lines — aim for **< 80 characters** per line\n`;
+    if (a.fn.some(f => f.n.length <= 2))
+      out += `- Use descriptive function names (avoid single-letter names like \`a\`, \`fn\`)\n`;
+    if (cxs > 50)
+      out += `- Extract complex logic into smaller, **single-responsibility** functions\n`;
+    if (!/^\/\/|^#|^\/\*/.test(code.trim()))
+      out += `- Add a **file header comment** explaining the module's purpose\n`;
+
+    // Maintainability
+    out += `\n### 🔧 Maintainability\n`;
+    if (a.cl.length === 0 && a.fn.length > 5 && lang !== 'Python')
+      out += `- Consider grouping related functions into a **class** or **module**\n`;
+    if (/\b(1000|9999|255|3\.14|2\.71)\b/.test(code))
+      out += `- Replace magic numbers with **named constants** (e.g. \`const MAX = 1000\`)\n`;
+    if (a.fn.length > 10)
+      out += `- Split into **multiple files/modules** — this file is doing a lot\n`;
+    if (!/export/.test(code) && lang !== 'Python' && a.fn.length > 3)
+      out += `- Add \`export\` statements to make functions reusable as a module\n`;
+
+    // Modern patterns
+    out += `\n### 🌟 Modern Patterns\n`;
+    if (/\bvar\s+/.test(code))
+      out += `- Replace \`var\` with \`const\` (immutable) or \`let\` (reassignable)\n`;
+    if (/function\s*\(/.test(code) && !/=>\s/.test(code) && lang === 'JavaScript')
+      out += `- Use **arrow functions** \`(x) => x * 2\` for shorter anonymous functions\n`;
+    if (/\.then\(/.test(code) && !/async/.test(code))
+      out += `- Convert \`.then()\` chains to **async/await** for cleaner flow\n`;
+    if (/Object\.assign/.test(code))
+      out += `- Use **spread operator** \`{...obj}\` instead of \`Object.assign()\`\n`;
+
+    return out;
+  },
+
+  // ── TEST SUGGESTIONS ───────────────────────────────────────
+  tests(code, lang, a) {
+    const fw = {
+      JavaScript: 'Jest', TypeScript: 'Jest', Python: 'pytest',
+      Rust: 'built-in tests (#[test])', Go: 'testing package',
+      Java: 'JUnit 5', 'C++': 'Google Test'
+    };
+    const framework = fw[lang] || 'your preferred test framework';
+
+    let out = `## Unit Test Suggestions\n\n`;
+    out += `**Recommended framework:** ${framework}\n\n`;
+
+    if (a.fn.length === 0) {
+      out += `No functions detected — tests depend on your code structure.\n\n`;
+      out += `**General test checklist:**\n`;
+      out += `- Test with empty input\n- Test with typical input\n- Test with boundary values\n- Test error cases\n`;
+      return out;
+    }
+
+    out += `### Test Cases\n\n`;
+    a.fn.slice(0, 5).forEach(fn => {
+      out += `**\`${fn.n}()\`** — suggested tests:\n`;
+
+      // Generate test names based on function name patterns
+      const nm = fn.n.toLowerCase();
+      if (/sort|order/.test(nm)) {
+        out += `- ✅ Empty array → returns \`[]\`\n`;
+        out += `- ✅ Single element → returns same element\n`;
+        out += `- ✅ Already sorted → unchanged\n`;
+        out += `- ✅ Reverse sorted → correctly sorted\n`;
+        out += `- ✅ Duplicates → all preserved\n`;
+      } else if (/search|find|get|lookup/.test(nm)) {
+        out += `- ✅ Element exists → returns correct index/value\n`;
+        out += `- ✅ Element missing → returns -1/null/undefined\n`;
+        out += `- ✅ Empty collection → handles gracefully\n`;
+        out += `- ✅ Duplicate values → returns first match\n`;
+      } else if (/calc|compute|sum|add|multiply/.test(nm)) {
+        out += `- ✅ Zero input → returns 0\n`;
+        out += `- ✅ Positive numbers → correct result\n`;
+        out += `- ✅ Negative numbers → correct result\n`;
+        out += `- ✅ Large numbers → no overflow\n`;
+      } else if (/parse|format|convert/.test(nm)) {
+        out += `- ✅ Valid input → correct output format\n`;
+        out += `- ✅ Invalid input → throws or returns null\n`;
+        out += `- ✅ Edge case strings → empty, whitespace\n`;
+      } else {
+        out += `- ✅ Happy path — typical valid input\n`;
+        out += `- ✅ Edge case — empty/null/zero input\n`;
+        out += `- ✅ Error case — invalid input throws\n`;
+        out += `- ✅ Boundary — max/min values\n`;
+      }
+      out += '\n';
+    });
+
+    // Code example
+    if (lang === 'JavaScript' || lang === 'TypeScript') {
+      const firstFn = a.fn[0].n;
+      out += `### Example (Jest)\n\n`;
+      out += `\`\`\`js\nimport { ${firstFn} } from './yourFile';\n\ndescribe('${firstFn}', () => {\n  test('handles empty input', () => {\n    expect(${firstFn}([])).toEqual([]);\n  });\n  test('typical case', () => {\n    expect(${firstFn}([3,1,2])).toEqual([1,2,3]);\n  });\n});\n\`\`\``;
+    } else if (lang === 'Python') {
+      const firstFn = a.fn[0].n;
+      out += `### Example (pytest)\n\n`;
+      out += `\`\`\`python\nfrom your_module import ${firstFn}\n\ndef test_${firstFn}_empty():\n    assert ${firstFn}([]) == []\n\ndef test_${firstFn}_typical():\n    assert ${firstFn}([3,1,2]) == [1,2,3]\n\`\`\``;
+    }
+
+    return out;
+  },
+
+  // ── DOCUMENTATION ──────────────────────────────────────────
+  docs(code, lang, a) {
+    let out = `## API Documentation\n\n`;
+    const isJS = ['JavaScript', 'TypeScript'].includes(lang);
+    const isPy = lang === 'Python';
+
+    if (a.fn.length === 0 && a.cl.length === 0) {
+      out += `No functions or classes detected.\n`;
+      return out;
+    }
+
+    // Classes
+    a.cl.slice(0, 3).forEach(cl => {
+      out += `### Class \`${cl.n}\`\n\n`;
+      out += `> *Line ${cl.l}*\n\n`;
+      const classMethods = a.fn.filter(f => {
+        const idx = code.indexOf(`class ${cl.n}`);
+        return f.l > cl.l && f.l < (cl.l + 80);
+      });
+      if (classMethods.length > 0) {
+        out += `**Methods:**\n`;
+        classMethods.forEach(m => { out += `- \`${m.n}()\`\n`; });
+      }
+      out += '\n';
+    });
+
+    // Functions
+    a.fn.slice(0, 6).forEach(fn => {
+      out += `### \`${fn.n}()\`\n\n`;
+      // Try to extract signature
+      const lines = code.split('\n');
+      const defLine = lines[fn.l - 1] || '';
+      const params = defLine.match(/\(([^)]*)\)/);
+      const paramList = params ? params[1] : '';
+
+      if (isJS) {
+        out += `\`\`\`js\n${defLine.trim()}\n\`\`\`\n\n`;
+      } else if (isPy) {
+        out += `\`\`\`python\n${defLine.trim()}\n\`\`\`\n\n`;
+      }
+
+      out += `**Parameters:**\n`;
+      if (paramList.trim()) {
+        paramList.split(',').map(p => p.trim()).filter(Boolean).forEach(p => {
+          const name = p.split(/[:=]/)[0].trim().replace(/\.\.\./g, '');
+          out += `- \`${name}\` — description\n`;
+        });
+      } else {
+        out += `- *(none)*\n`;
+      }
+
+      const fnCode = lines.slice(fn.l - 1, fn.l + 15).join('\n');
+      const hasReturn = /\breturn\s+[^;]/.test(fnCode);
+      out += `\n**Returns:** ${hasReturn ? '`value` — description' : '`void` — no return value'}\n\n`;
+
+      out += `**Example:**\n`;
+      if (isJS) out += `\`\`\`js\nconst result = ${fn.n}(/* args */);\nconsole.log(result);\n\`\`\`\n\n`;
+      else if (isPy) out += `\`\`\`python\nresult = ${fn.n}(# args)\nprint(result)\n\`\`\`\n\n`;
+    });
+
+    return out;
+  },
+
+  // ── REFACTORING ────────────────────────────────────────────
+  refactor(code, lang, s, a) {
+    let out = `## Refactoring Suggestions\n\n`;
+    const isJS = ['JavaScript', 'TypeScript'].includes(lang);
+    let count = 0;
+
+    // 1. Long functions
+    if (a.fn.length > 1) {
+      const lines = code.split('\n');
+      a.fn.forEach((fn, i) => {
+        const nextFn = a.fn[i + 1];
+        const end = nextFn ? nextFn.l - 1 : lines.length;
+        const len = end - fn.l;
+        if (len > 40) {
+          out += `### 1. Split long function \`${fn.n}()\`\n\n`;
+          out += `This function is ~**${len} lines** — hard to test and understand.\n`;
+          out += `**How to refactor:**\n`;
+          out += `- Identify logical sections (setup, processing, output)\n`;
+          out += `- Extract each section into a named helper function\n`;
+          out += `- Aim for functions under **20-30 lines**\n\n`;
+          count++;
+        }
+      });
+    }
+
+    // 2. Magic numbers
+    const magics = [];
+    code.split('\n').forEach((line, i) => {
+      const m = line.match(/\b([2-9]\d{2,}|\d{4,})\b/g);
+      if (m) m.forEach(n => { if (n !== '2023' && n !== '2024' && n !== '2025') magics.push({ n, line: i + 1 }); });
+    });
+    if (magics.length > 0) {
+      out += `### ${++count}. Replace magic numbers with constants\n\n`;
+      out += `Found ${magics.length} magic number(s):\n`;
+      magics.slice(0, 4).forEach(m => {
+        out += `- Line ${m.line}: \`${m.n}\` → \`const MEANINGFUL_NAME = ${m.n}\`\n`;
+      });
+      out += '\n';
+    }
+
+    // 3. Repeated code
+    const fnCodes = a.fn.map(f => {
+      const idx = code.indexOf(f.n + '(');
+      return { name: f.n, code: code.slice(idx, idx + 200) };
+    });
+
+    // 4. Long parameter lists
+    a.fn.forEach(fn => {
+      const defLine = code.split('\n')[fn.l - 1] || '';
+      const params = defLine.match(/\(([^)]{40,})\)/);
+      if (params) {
+        out += `### ${++count}. Reduce parameters of \`${fn.n}()\`\n\n`;
+        out += `This function has many parameters — consider using an **options object**:\n\n`;
+        if (isJS) {
+          out += `\`\`\`js\n// Before\nfunction ${fn.n}(a, b, c, d) { ... }\n\n// After\nfunction ${fn.n}({ a, b, c, d }) { ... }\n\`\`\`\n\n`;
+        }
+      }
+    });
+
+    // 5. Deeply nested code
+    const maxIndent = Math.max(...code.split('\n').map(l => (l.match(/^(\s+)/)?.[1]?.length || 0)));
+    if (maxIndent > 16) {
+      out += `### ${++count}. Reduce nesting depth\n\n`;
+      out += `Code is nested **${Math.round(maxIndent / 2)} levels** deep — hard to follow.\n`;
+      out += `**Techniques:**\n`;
+      out += `- Use **early returns** to handle edge cases first\n`;
+      out += `- Extract nested blocks into named functions\n`;
+      out += `- Replace nested ifs with a single switch/object map\n\n`;
+    }
+
+    if (count === 0) {
+      out += `✅ **Code structure looks clean!**\n\n`;
+      out += `Minor style suggestions:\n`;
+      if (isJS) out += `- Use **destructuring** for cleaner variable extraction\n`;
+      out += `- Add **JSDoc/docstring** comments for public functions\n`;
+      out += `- Consider a consistent naming convention throughout\n`;
+    }
+
+    return out;
+  }
+};
+
 const ACC=['#3b82f6','#a855f7','#22d3ee','#4ade80','#fbbf24','#fb7185','#f97316','#c084fc','#34d399','#60a5fa'];
 const LC={JavaScript:'#f7df1e',TypeScript:'#3178c6',Python:'#3776ab',Rust:'#ce422b',Go:'#00add8',CSS:'#264de4',HTML:'#e34c26','C++':'#00599c',Java:'#007396',SQL:'#fbbf24',Shell:'#4ade80',Other:'#a855f7'};
 const EXT={JavaScript:'script.js',TypeScript:'module.ts',Python:'main.py',Rust:'main.rs',Go:'main.go',CSS:'styles.css',HTML:'index.html','C++':'main.cpp',Java:'Main.java',SQL:'query.sql',Shell:'run.sh',Other:'code.txt'};
 const AI_P=[
-  {l:'Explain',p:'Explain this code clearly and in detail. What does it do and how does it work?'},
-  {l:'Improve',p:'Analyze: how to improve performance, readability, and best practices.'},
-  {l:'Bugs',p:'Find bugs and edge cases. Include line numbers.'},
-  {l:'Big-O',p:'Analyze time and space complexity for each algorithm.'},
-  {l:'Tests',p:'Write unit tests using the appropriate testing library.'},
-  {l:'Docs',p:'Generate API documentation: parameters, return values, examples.'},
-  {l:'Refactor',p:'Refactor this code: structure, naming, modularity.'},
+  {l:'✦ Explain',p:'Explain this code in detail. What does it do and how does it work?'},
+  {l:'🐛 Bugs',p:'Find bugs and edge cases. Include line numbers.'},
+  {l:'⚡ Big-O',p:'Analyze time and space complexity for each algorithm.'},
+  {l:'⚙ Improve',p:'Improve performance, readability, and best practices.'},
+  {l:'🧪 Tests',p:'Write unit tests using the appropriate testing library.'},
+  {l:'📖 Docs',p:'Generate API documentation: parameters, return values, examples.'},
+  {l:'♻ Refactor',p:'Refactor this code: structure, naming, modularity.'},
 ];
 let P=[],C=[],curP=null,flt='All',vw='grid',dashOn=false,selC=ACC[0],pDel=null,curtab='prev',favOnly=false,curColl=null,aiCache={},editMode=false,selCollC=ACC[0],ntTimer=null,recentIds=[],focusIdx=-1,dragSrcId=null,galleryObserver=null;
 let mouse={x:0,y:0};
@@ -653,18 +1208,51 @@ function buildCharts(p){
   const w3=document.createElement('div');w3.className='chart-wrap';w3.innerHTML='<div class="chart-title">Komplexität · CX '+cxs+' · '+cxC(cxs).l+'</div>';const cv3=document.createElement('canvas');cv3.height=90;w3.appendChild(cv3);panel.appendChild(w3);
   requestAnimationFrame(()=>{cv3.width=w3.clientWidth-32;const ctx=cv3.getContext('2d'),W=cv3.width,H=90;const zones=[{l:'Simple',c:'#4ade80',f:0,t:30},{l:'Medium',c:'#fbbf24',f:30,t:60},{l:'Complex',c:'#fb923c',f:60,t:80},{l:'High',c:'#fb7185',f:80,t:100}];const barH=20,y=(H-barH)/2;zones.forEach(z=>{const x1=(z.f/100)*W,x2=(z.t/100)*W;ctx.fillStyle=z.c+'30';ctx.fillRect(x1,y,x2-x1,barH)});const nx=(cxs/100)*W,cc2=cxC(cxs);ctx.shadowColor=cc2.c;ctx.shadowBlur=12;ctx.fillStyle=cc2.c;ctx.fillRect(nx-1.5,y-4,3,barH+8);ctx.shadowBlur=0;ctx.font='8px "JetBrains Mono",monospace';zones.forEach(z=>{const mid=((z.f+z.t)/2/100)*W;ctx.fillStyle=z.c;ctx.textAlign='center';ctx.fillText(z.l,mid,y+barH+14)});ctx.textAlign='left'});
 }
-function isLivable(p){if(p.language==='HTML'||p.language==='CSS')return true;if(p.language==='JavaScript'&&(p.code.includes('canvas')||p.code.includes('document')||p.code.includes('requestAnimationFrame')||p.code.includes('setInterval')))return true;return false}
+function isLivable(p){
+  if(p.language==='HTML'||p.language==='CSS')return true;
+  // Full HTML document saved under any language
+  if(/<!DOCTYPE|<html\b/i.test(p.code.slice(0,300)))return true;
+  if(p.language==='JavaScript'&&(
+    p.code.includes('canvas')||p.code.includes('document')||
+    p.code.includes('requestAnimationFrame')||p.code.includes('setInterval')
+  ))return true;
+  return false;
+}
 function buildSrcdoc(p){
   const safe=p.code.replace(/<\/script>/gi,'<\\/script>');
-  if(p.language==='HTML')return '<!DOCTYPE html><html><head><meta charset="UTF-8"><style>*{box-sizing:border-box;margin:0;padding:0}html,body{width:100%;height:100%;overflow:hidden;font-family:system-ui,sans-serif}</style></head><body>'+p.code+'</body></html>';
-  if(p.language==='CSS')return '<!DOCTYPE html><html><head><meta charset="UTF-8"><style>*{box-sizing:border-box;margin:0;padding:0}html,body{width:100%;height:100%;overflow:hidden;background:linear-gradient(135deg,#020817,#0a1128);display:flex;align-items:center;justify-content:center;font-family:system-ui,sans-serif}'+p.code+'</style></head><body><div class="glass"><h2 style="font-size:1.2rem;margin-bottom:.5rem">Preview</h2><p style="opacity:.7;font-size:.85rem">Live CSS</p></div></body></html>';
-  if(p.code.includes('canvas')||p.code.includes('requestAnimationFrame'))return '<!DOCTYPE html><html><head><meta charset="UTF-8"><style>*{margin:0;padding:0;box-sizing:border-box}html,body{width:100%;height:100%;overflow:hidden;background:#000}canvas{display:block;width:100%!important;height:100%!important}</style></head><body><canvas></canvas><script>'+safe+'<\/script></body></html>';
+  if(p.language==='HTML'||/<!DOCTYPE|<html\b/i.test(p.code.slice(0,300))){
+  // Full HTML document → use directly, no double-wrapping
+  if(/<!DOCTYPE|<html\b/i.test(p.code.slice(0,300)))return p.code;
+  return '<!DOCTYPE html><html><head><meta charset="UTF-8">'
+    +'<style>*{box-sizing:border-box;margin:0;padding:0}'
+    +'html,body{width:100%;height:100%;overflow:hidden;font-family:system-ui,sans-serif}'
+    +'</style></head><body>'+p.code+'</body></html>';
+}
+  if(p.language==='CSS'){
+  const selectors=[...new Set((p.code.match(/\.([a-zA-Z][\w-]*)/g)||[]).map(c=>c.slice(1)))];
+  const demoHTML=selectors.length>0
+    ?selectors.slice(0,3).map(c=>'<div class="'+c+'"></div>').join('')
+    :'';
+  // Escape </style> so CSS code can never break out of the <style> block
+  const safeCss=p.code.replace(/<\/style>/gi,'<\\/style>');
+  return '<!DOCTYPE html><html><head><meta charset="UTF-8"><style>'
+    +'*{box-sizing:border-box;margin:0;padding:0}'
+    +'html,body{width:100%;height:100%;overflow:hidden;'
+    +'display:flex;flex-wrap:wrap;align-items:center;justify-content:center;'
+    +'gap:1.5rem;padding:1.5rem}'
+    +safeCss
+    +'</style></head><body>'+demoHTML+'</body></html>';
+}
+
+  // If code is a full HTML document (even if saved as JS), pass through directly
+if(/<!DOCTYPE|<html\b/i.test(p.code.slice(0,300)))return p.code;
+if(p.code.includes('canvas')||p.code.includes('requestAnimationFrame'))return '<!DOCTYPE html><html><head><meta charset="UTF-8"><style>*{margin:0;padding:0;box-sizing:border-box}html,body{width:100%;height:100%;overflow:hidden;background:#000}canvas{display:block;width:100%!important;height:100%!important}</style></head><body><canvas></canvas><script>'+safe+'<\/script></body></html>';
   return '<!DOCTYPE html><html><head><meta charset="UTF-8"><style>*{box-sizing:border-box;margin:0}body{background:#020817;color:#cdd6f4;font-family:"JetBrains Mono",monospace;font-size:11px;padding:.75rem;overflow:hidden}#out{line-height:1.6}.l{margin-bottom:2px}.ok{color:#4ade80}.err{color:#f87171}.ret{color:#fbbf24}</style></head><body><div id="out"></div><script>var out=document.getElementById("out");function add(c,t){var d=document.createElement("div");d.className="l "+c;d.textContent=t;out.appendChild(d)}var ol=console.log,oe=console.error;console.log=function(){ol.apply(console,arguments);add("ok",Array.from(arguments).map(function(x){return typeof x==="object"?JSON.stringify(x):String(x)}).join(" "))};console.error=function(){oe.apply(console,arguments);add("err",Array.from(arguments).join(" "))};try{var r=(function(){'+safe+'})();if(r!==undefined)add("ret","→ "+JSON.stringify(r))}catch(e){add("err",e.name+": "+e.message)}<\/script></body></html>';
 }
 function injectLiveIframe(card,p){const wrap=card.querySelector('.card-live-wrap');if(!wrap||wrap.dataset.loaded)return;wrap.dataset.loaded='1';const ph=wrap.querySelector('.card-live-placeholder');const ifr=document.createElement('iframe');ifr.sandbox='allow-scripts';ifr.style.cssText='position:absolute;inset:0;width:100%;height:100%;border:none;display:block;pointer-events:none;opacity:0;transition:opacity .6s';ifr.onload=()=>{ifr.style.opacity='1';if(ph)ph.style.display='none'};ifr.srcdoc=buildSrcdoc(p);wrap.appendChild(ifr)}
 function buildPrev(p){
   const el=document.getElementById('pvc');const fsB=el.querySelector('.fs-btn');const fsBc=fsB?.cloneNode(true);el.innerHTML='';if(fsBc){fsBc.onclick=openFs;el.appendChild(fsBc)}if(!p)return;
-  if(p.language==='HTML'||p.language==='CSS'){document.getElementById('pvlbl').textContent=p.language==='HTML'?'🔴 Live HTML':'🔵 CSS Demo';const ifr=document.createElement('iframe');ifr.className='pv-iframe';ifr.srcdoc=buildSrcdoc(p);ifr.sandbox='allow-scripts';el.appendChild(ifr);return}
+  if(p.language==='HTML'||p.language==='CSS'){document.getElementById('pvlbl').textContent=  (p.language==='HTML'||/<!DOCTYPE|<html\b/i.test(p.code.slice(0,300)))?'🔴 Live HTML':  p.language==='CSS'?'🔵 Live CSS':'🟢 Live Preview';const ifr=document.createElement('iframe');ifr.className='pv-iframe';ifr.srcdoc=buildSrcdoc(p);ifr.sandbox='allow-scripts';el.appendChild(ifr);return}
   if(p.language==='JavaScript'&&p.code.includes('canvas')){document.getElementById('pvlbl').textContent='🟢 Live Canvas';const ifr=document.createElement('iframe');ifr.className='pv-iframe';ifr.style.background='#000';ifr.srcdoc=buildSrcdoc(p);ifr.sandbox='allow-scripts';el.appendChild(ifr);return}
   document.getElementById('pvlbl').textContent='◈ Pixelated Code View';
   const wrap=document.createElement('div');wrap.className='pv-cw';const cv=document.createElement('canvas');const W=Math.min(540,el.clientWidth-60||500),H=Math.round(W*.72);cv.width=W;cv.height=H;cv.style.cssText='max-width:92%;max-height:85%;border:1px solid rgba(255,255,255,.07);border-radius:10px;cursor:crosshair';
@@ -733,7 +1321,7 @@ function renderGallery(){
     const lc=LC[p.language]||'#888',cxs=cx(p.code),cc=cxC(cxs),coll=C.find(c=>c.id===p.collId),focused=idx===focusIdx?'focused-card':'';
     const r2=parseInt(p.accentColor.slice(1,3),16),g2=parseInt(p.accentColor.slice(3,5),16),b2=parseInt(p.accentColor.slice(5,7),16),isLive=isLivable(p);
     return '<div class="card '+focused+'" onclick="openP(\''+p.id+'\')" style="animation-delay:'+Math.min(idx*.05,.6)+'s;--card-glow:rgba('+r2+','+g2+','+b2+',.3)" data-id="'+p.id+'" data-live="'+isLive+'" draggable="true">'
-      +(isLive?'<div class="card-live-wrap"><div class="card-live-placeholder" id="ph-'+p.id+'"><div class="card-live-spinner"></div><span>Lade Preview…</span></div></div><span class="card-live-badge"><span class="card-live-dot"></span>LIVE</span>'
+      +(isLive?'<div class="card-live-wrap"><div class="card-live-placeholder" id="ph-'+p.id+'"><div class="card-live-spinner"></div><span>Loading…</span></div></div><span class="card-live-badge"><span class="card-live-dot"></span>LIVE</span>'
               :'<div class="card-canvas-wrap"><canvas id="th-'+p.id+'" width="600" height="450"></canvas></div>')
       +'<div class="card-top-glow" style="background:linear-gradient(90deg,transparent,'+p.accentColor+',transparent);box-shadow:0 0 14px '+p.accentColor+'90"></div>'
       +'<span class="card-fav '+(p.starred?'on':'')+'" onclick="event.stopPropagation();toggleFav(\''+p.id+'\')">'+(p.starred?'★':'☆')+'</span>'
@@ -816,35 +1404,133 @@ function updateFavBtn(p){const b=document.getElementById('dfav-btn');if(!b)retur
 async function copyCode(){const code=editMode?document.getElementById('editor-ta').value:curP?.code;if(!code)return;try{await navigator.clipboard.writeText(code);const b=document.getElementById('cpybtn');b.textContent='✓';b.style.color='var(--green)';setTimeout(()=>{b.textContent='⎘';b.style.color=''},1800);toast('Code copied','ok')}catch{toast('Copy failed','err')}}
 function dlCode(){if(!curP)return;const blob=new Blob([curP.code],{type:'text/plain'});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download=EXT[curP.language]||'code.txt';a.click();URL.revokeObjectURL(url);toast('Download started','info')}
 function exportAll(){const blob=new Blob([JSON.stringify({P,C},null,2)],{type:'application/json'});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download='codex-'+new Date().toISOString().slice(0,10)+'.json';a.click();URL.revokeObjectURL(url);toast(P.length+' projects exported','ok')}
-function importJSON(){const raw=document.getElementById('import-json').value.trim();if(!raw){toast('No JSON','err');return}importData(raw)}
-function importFile(e){const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=ev=>importData(ev.target.result);r.readAsText(f)}
+
+function importFromHTML(htmlContent){
+  // Strategy 1: extract Base64 from our own export format
+  // Pattern: const RAW=atob('...');
+  const b64Match = htmlContent.match(/const RAW=atob\('([A-Za-z0-9+/=]+)'\)/);
+  if(b64Match){
+    try{
+      const json=decodeURIComponent(escape(atob(b64Match[1])));
+      importData(json);
+      return;
+    }catch(e){
+      toast('HTML data corrupt: '+e.message,'err');
+      return;
+    }
+  }
+
+  // Strategy 2: look for embedded JSON script block
+  const jsonMatch = htmlContent.match(/const\s+CODEX_DATA\s*=\s*({[\s\S]+?});/);
+  if(jsonMatch){
+    try{
+      importData(jsonMatch[1]);
+      return;
+    }catch(e){}
+  }
+
+  // Strategy 3: look for any JSON-like block with P: and C: arrays
+  const pMatch = htmlContent.match(/"P"\s*:\s*(\[[\s\S]+?\])/);
+  if(pMatch){
+    try{
+      const wrapped='{"P":'+pMatch[1]+',"C":[]}';
+      importData(wrapped);
+      return;
+    }catch(e){}
+  }
+
+  toast('No CODEX data found in this HTML file','err');
+}
+function importJSON(){
+  const raw=document.getElementById('import-json').value.trim();
+  if(!raw){toast('No JSON','err');return}
+  if(raw.startsWith('<!DOCTYPE')||raw.startsWith('<html')){
+    importFromHTML(raw);
+  } else {
+    importData(raw);
+  }
+}
+function importFile(e){const f=e.target.files[0];if(!f)return;
+  const r=new FileReader();
+  r.onload=ev=>{
+    const content=ev.target.result;
+    // Detect exported HTML gallery and extract embedded data
+    if(f.name.endsWith('.html')||content.trimStart().startsWith('<!DOCTYPE')||content.trimStart().startsWith('<html')){
+      importFromHTML(content);
+    } else {
+      importData(content);
+    }
+  };
+  r.readAsText(f);
+}
 function importData(raw){try{const d=JSON.parse(raw);const arr=d.P||[].concat(d);let n=0;if(d.C)d.C.forEach(c=>{if(!C.find(x=>x.id===c.id))C.push(c)});arr.forEach(p=>{if(!p.name||!p.code)return;if(!P.find(x=>x.name===p.name&&x.code===p.code)){P.push({id:uid(),language:'Other',tags:[],accentColor:ACC[0],description:'',starred:false,note:'',...p,id:uid()});n++}});save();render();hideModal('import-modal');toast(n+' imported','ok')}catch{toast('Invalid JSON','err')}}
 function dragOver(e){e.preventDefault();document.getElementById('drop-zone').classList.add('active')}
 function dragLeave(){document.getElementById('drop-zone').classList.remove('active')}
-function dropFile(e){e.preventDefault();dragLeave();const f=e.dataTransfer.files[0];if(!f)return;const r=new FileReader();r.onload=ev=>importData(ev.target.result);r.readAsText(f)}
+function dropFile(e){e.preventDefault();dragLeave();const f=e.dataTransfer.files[0];
+  if(!f)return;
+  const r=new FileReader();
+  r.onload=ev=>{
+    const content=ev.target.result;
+    if(f.name.endsWith('.html')||content.trimStart().startsWith('<!DOCTYPE')||content.trimStart().startsWith('<html')){
+      importFromHTML(content);
+    } else {
+      importData(content);
+    }
+  };
+  r.readAsText(f);
+}
 function shareProject(){if(!curP)return;try{const data=btoa(unescape(encodeURIComponent(JSON.stringify(curP))));const url=location.href.split('#')[0]+'#share='+data;document.getElementById('share-url-text').textContent=url;drawQR(url);showModal('share-modal')}catch{toast('Share failed','err')}}
 async function copyShareUrl(){try{await navigator.clipboard.writeText(document.getElementById('share-url-text').textContent);toast('URL copied','ok')}catch{toast('Copy failed','err')}}
 function checkShare(){if(!location.hash.startsWith('#share='))return;try{const p=JSON.parse(decodeURIComponent(escape(atob(location.hash.slice(7)))));if(!p.name||!p.code)return;if(!P.find(x=>x.name===p.name&&x.code===p.code)){P.push({id:uid(),language:'Other',tags:[],accentColor:ACC[0],description:'',starred:false,note:'',...p,id:uid()});save();setTimeout(()=>toast('Shared project added ✓','ok'),500)}history.replaceState(null,'',location.pathname)}catch{}}
 function setupAIP(){document.getElementById('ai-presets').innerHTML=AI_P.map(p=>'<button class="ai-preset" onclick="runPreset('+JSON.stringify(p.p)+')">'+p.l+'</button>').join('')}
 function runPreset(prompt){document.getElementById('ai-input').value=prompt;runAI()}
-function resetAI(){const res=document.getElementById('ai-res');res.className='ai-res empty';res.innerHTML='<div><div style="font-size:2rem;opacity:.15;margin-bottom:.46rem">✦</div><span style="font-size:.73rem">Choose a template or ask your own question</span></div>';document.getElementById('ai-meta').style.display='none';document.getElementById('ai-input').value=''}
-async function runAI(){
-  if(!curP)return;if(!checkApiKey())return;const userPrompt=document.getElementById('ai-input').value.trim();if(!userPrompt){toast('Question required','err');return}
-  const key=curP.id+'::'+userPrompt;if(aiCache[key]){showAIR(aiCache[key],true);return}
-  const res=document.getElementById('ai-res');res.className='ai-res loading';res.innerHTML='<div class="ai-spin"></div><div style="font-size:.68rem;color:var(--mut);margin-top:.28rem;font-family:var(--fc)">claude analysiert…</div>';
-  document.getElementById('ai-meta').style.display='none';toast('AI analyzing…','ai');
-  try{
-    const resp=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:apiHeaders(),body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:1000,system:'You are an expert software developer. Respond in English, using structured Markdown.',messages:[{role:'user',content:userPrompt+'\n\n```'+curP.language.toLowerCase()+'\n'+curP.code+'\n```'}]})});
-    // ── Safe response parsing ──
-    let data;try{data=await resp.json()}catch(e){throw new Error('HTTP '+resp.status+': response is not JSON — check your API key')}
-    if(!resp.ok||data.error){throw new Error((data.error&&(data.error.message||JSON.stringify(data.error)))||('HTTP '+resp.status))}
-    const txt=(data.content||[]).map(c=>c.text||'').join('')||'No response.';aiCache[key]=txt;showAIR(txt,false);
-  }catch(err){res.className='ai-res';res.innerHTML='<div style="color:var(--rose)">Error: '+esc(err.message)+'</div>';toast('AI failed','err')}
+function resetAI(){const res=document.getElementById('ai-res');res.className='ai-res empty';res.innerHTML='<div><div style="font-size:2rem;opacity:.15;margin-bottom:.46rem">✦</div><span style="font-size:.73rem">Choose an analysis type or ask about the code</span></div>';document.getElementById('ai-meta').style.display='none';document.getElementById('ai-input').value=''}
+function runAI(){
+  if(!curP)return;
+  const userPrompt=document.getElementById('ai-input').value.trim();
+  if(!userPrompt){toast('Question required','err');return}
+  const key=curP.id+'::'+userPrompt;
+  if(aiCache[key]){showAIR(aiCache[key],true);return}
+  const res=document.getElementById('ai-res');
+  res.className='ai-res loading';
+  res.innerHTML='<div class="ai-spin"></div><div style="font-size:.68rem;color:var(--mut);margin-top:.28rem;font-family:var(--fc)">Analyzing locally…</div>';
+  document.getElementById('ai-meta').style.display='none';
+  // Use local engine — works everywhere, instant, no API needed
+  setTimeout(()=>{
+    try{
+      const result=LocalAI.analyze(curP.code,curP.language,userPrompt);
+      aiCache[key]=result;
+      showAIR(result,false);
+      toast('Analysis complete','ok');
+    }catch(err){
+      res.className='ai-res';
+      res.innerHTML='<div style="color:var(--rose)">Error: '+esc(err.message)+'</div>';
+      toast('Analysis failed','err');
+    }
+  },300);
 }
 function showAIR(txt,fromCache){
   const res=document.getElementById('ai-res');res.className='ai-res';
-  let h=esc(txt).replace(/^#{2,4} (.+)$/gm,'<h4>$1</h4>').replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>').replace(/\*(.+?)\*/g,'<em>$1</em>').replace(/`([^`]+)`/g,'<code>$1</code>').replace(/^[-*] (.+)$/gm,'<li>$1</li>').replace(/(<li>[\s\S]*?<\/li>)/g,'<ul>$1</ul>').replace(/<\/ul>\s*<ul>/g,'').replace(/\n\n/g,'<br><br>').replace(/\n/g,'<br>');
-  res.innerHTML=h;document.getElementById('ai-mt').textContent='claude-sonnet-4 · '+(fromCache?'Cache':'Live')+' · '+txt.length+'z';document.getElementById('ai-meta').style.display='flex';
+  // Improved markdown renderer
+  let h=esc(txt)
+    .replace(/^### (.+)$/gm,'<h4 style="color:#a78bfa;font-size:.82rem;margin:.6rem 0 .2rem">$1</h4>')
+    .replace(/^## (.+)$/gm,'<h4 style="color:#93c5fd;font-size:.9rem;font-weight:700;margin:.7rem 0 .3rem;padding-bottom:.2rem;border-bottom:1px solid rgba(255,255,255,.06)">$1</h4>')
+    .replace(/^# (.+)$/gm,'<h4 style="color:#fff;font-size:1rem;font-weight:800;margin:.5rem 0 .4rem">$1</h4>')
+    .replace(/\*\*(.+?)\*\*/g,'<strong style="color:var(--txt);font-weight:600">$1</strong>')
+    .replace(/\*(.+?)\*/g,'<em>$1</em>')
+    .replace(/```[a-z]*\n([\s\S]*?)```/g,'<pre style="background:rgba(0,0,0,.35);border:1px solid rgba(255,255,255,.08);border-radius:6px;padding:.5rem .7rem;font-size:.68rem;overflow-x:auto;margin:.3rem 0;white-space:pre-wrap">$1</pre>')
+    .replace(/`([^`]+)`/g,'<code style="font-family:var(--fc);font-size:.71rem;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.1);padding:.07rem .28rem;border-radius:3px;color:#7dd3fc">$1</code>')
+    .replace(/^[-*] ✅(.+)$/gm,'<li style="color:#4ade80;list-style:none;padding-left:.3rem">✅$1</li>')
+    .replace(/^[-*] ❌(.+)$/gm,'<li style="color:#f87171;list-style:none;padding-left:.3rem">❌$1</li>')
+    .replace(/^[-*] 🔴(.+)$/gm,'<li style="color:#f87171;list-style:none;padding-left:.3rem">🔴$1</li>')
+    .replace(/^[-*] 🟡(.+)$/gm,'<li style="color:#fbbf24;list-style:none;padding-left:.3rem">🟡$1</li>')
+    .replace(/^[-*] (.+)$/gm,'<li style="padding-left:.3rem">$1</li>')
+    .replace(/(<li[^>]*>[\s\S]*?<\/li>\n?)+/g,'<ul style="padding-left:.8rem;margin:.2rem 0;display:flex;flex-direction:column;gap:.12rem">$&</ul>')
+    .replace(/\n\n/g,'<div style="height:.4rem"></div>')
+    .replace(/\n/g,'<br>');
+  res.innerHTML=h;
+  document.getElementById('ai-mt').textContent='⚡ Local · '+(fromCache?'Cached':'Fresh')+' · '+txt.length+' chars';
+  document.getElementById('ai-meta').style.display='flex';
 }
 let drwStep=1,drwEditId=null,aiReviewData=null;
 function renderSwts(sel){document.getElementById('swts').innerHTML=ACC.map(c=>'<div class="sw2 '+(c===sel?'on':'')+'" style="background:'+c+'" data-color="'+c+'" onclick="setAcc(\''+c+'\')"></div>').join('');selC=sel}
@@ -854,44 +1540,166 @@ function goDrwStep(n){
   document.getElementById('drw-step1').style.display=n===1?'flex':'none';document.getElementById('drw-step2').style.display=n===2?'flex':'none';document.getElementById('drw-step3').style.display=n===3?'flex':'none';
   renderDrwFooter(n);if(n===2)runAIReview();if(n===3)buildDrwPreview();
 }
-function renderDrwFooter(step){const btns=document.getElementById('drw-footer-btns');if(!btns)return;if(step===1)btns.innerHTML='<button class="btn btn-primary" onclick="drwNext1()">Next → AI Review ✦</button>';else if(step===2)btns.innerHTML='<button class="btn btn-ghost" onclick="goDrwStep(1)">← Back</button><button class="btn btn-primary" id="drw-pub-btn" onclick="goDrwStep(3)">Preview & Veröffentlichen →</button>';else btns.innerHTML='<button class="btn btn-ghost" onclick="goDrwStep(2)">← AI Results</button><button class="btn btn-primary" onclick="saveP()" style="background:linear-gradient(135deg,rgba(74,222,128,.18),rgba(59,130,246,.18));border-color:rgba(74,222,128,.38)">🚀 Publish to Gallery</button>'}
+function renderDrwFooter(step){const btns=document.getElementById('drw-footer-btns');if(!btns)return;if(step===1)btns.innerHTML='<button class="btn btn-primary" onclick="drwNext1()">Next → AI Review ✦</button>';else if(step===2)btns.innerHTML='<button class="btn btn-ghost" onclick="goDrwStep(1)">← Back</button><button class="btn btn-primary" id="drw-pub-btn" onclick="goDrwStep(3)">Preview &amp; Publish →</button>';else btns.innerHTML='<button class="btn btn-ghost" onclick="goDrwStep(2)">← AI Results</button><button class="btn btn-primary" onclick="saveP()" style="background:linear-gradient(135deg,rgba(74,222,128,.18),rgba(59,130,246,.18));border-color:rgba(74,222,128,.38)">🚀 Publish to Gallery</button>'}
 function drwNext1(){const name=document.getElementById('fn').value.trim(),code=document.getElementById('fc').value.trim();if(!name){document.getElementById('fn').focus();toast('Name required','err');return}if(code.length<10){document.getElementById('fc').focus();toast('Code is too short','err');return}autoDetectLang(code);goDrwStep(2)}
 function autoDetectLang(code){const hints=[{lang:'Python',s:()=>(code.match(/\bdef \w+\s*\(|\bimport \w|\bprint\s*\(|\bself\b/g)||[]).length},{lang:'TypeScript',s:()=>(code.match(/:\s*(string|number|boolean|void|any)\b|interface |<T>/g)||[]).length*2},{lang:'JavaScript',s:()=>(code.match(/\bconst\b|\blet\b|\bconsole\b|\bfunction\b/g)||[]).length},{lang:'Rust',s:()=>(code.match(/\bfn \w+|\blet mut\b|\bimpl\b/g)||[]).length},{lang:'Go',s:()=>(code.match(/\bfunc \w+|\bpackage\b|\bfmt\./g)||[]).length},{lang:'CSS',s:()=>(code.match(/\{[\s\S]*?:\s*[\w#]|\bmargin:\b/g)||[]).length},{lang:'HTML',s:()=>(code.match(/<html|<div|<body|<!DOCTYPE/gi)||[]).length},{lang:'SQL',s:()=>(code.match(/\bSELECT\b|\bFROM\b|\bWHERE\b/gi)||[]).length}];const best=hints.sort((a,b)=>b.s()-a.s())[0];if(best&&best.s()>0){const sel=document.getElementById('fl');for(let i=0;i<sel.options.length;i++){if(sel.options[i].text===best.lang){sel.selectedIndex=i;document.getElementById('lang-auto-hint').textContent='(auto-detected)';break}}}updatePreviewHint()}
 function onCodeInput(){const code=document.getElementById('fc').value;const hint=document.getElementById('code-lines-hint');if(hint)hint.textContent=code.split('\n').length>1?'('+code.split('\n').length+' lines)':'';updatePreviewHint()}
-function updatePreviewHint(){const code=document.getElementById('fc').value,lang=document.getElementById('fl').value,hint=document.getElementById('preview-type-hint');if(!hint)return;const p={language:lang,code};if(isLivable(p)){hint.style.cssText='display:flex;align-items:center;gap:.5rem;padding:.5rem .75rem;border-radius:8px;border:1px solid rgba(74,222,128,.3);background:rgba(74,222,128,.06);color:#4ade80;font-size:.73rem';hint.innerHTML='<span>▶</span><span><strong>Live-Preview</strong> — dieser Code läuft animiert in der Galerie</span>'}else if(lang&&lang!=='Other'){hint.style.cssText='display:flex;align-items:center;gap:.5rem;padding:.5rem .75rem;border-radius:8px;border:1px solid rgba(59,130,246,.2);background:rgba(59,130,246,.04);color:#93c5fd;font-size:.73rem';hint.innerHTML='<span>◈</span><span><strong>Pixelated Art</strong> — structural code visualization</span>'}else hint.style.display='none'}
-async function runAIReview(){
-  if(!checkApiKey()){if(document.getElementById('ai-review-loading'))document.getElementById('ai-review-loading').style.display='none';if(document.getElementById('ai-review-content')){document.getElementById('ai-review-content').style.display='block';document.getElementById('ai-review-content').innerHTML='<div style="color:var(--rose)">No API key set. Enter your key in Settings.</div><div style="font-size:.72rem;color:var(--mut);margin-top:.4rem">You can still publish.</div>';}return;}
-  const code=document.getElementById('fc').value.trim(),lang=document.getElementById('fl').value;aiReviewData=null;
+function updatePreviewHint(){const code=document.getElementById('fc').value,lang=document.getElementById('fl').value,hint=document.getElementById('preview-type-hint');if(!hint)return;const p={language:lang,code};if(isLivable(p)){hint.style.cssText='display:flex;align-items:center;gap:.5rem;padding:.5rem .75rem;border-radius:8px;border:1px solid rgba(74,222,128,.3);background:rgba(74,222,128,.06);color:#4ade80;font-size:.73rem';hint.innerHTML='<span>▶</span><span><strong>Live Preview</strong> — dieser Code runs animated in the gallery</span>'}else if(lang&&lang!=='Other'){hint.style.cssText='display:flex;align-items:center;gap:.5rem;padding:.5rem .75rem;border-radius:8px;border:1px solid rgba(59,130,246,.2);background:rgba(59,130,246,.04);color:#93c5fd;font-size:.73rem';hint.innerHTML='<span>◈</span><span><strong>Pixelated Art</strong> — structural code visualization</span>'}else hint.style.display='none'}
+function runAIReview(){
+  const code=document.getElementById('fc').value.trim();
+  const lang=document.getElementById('fl').value;
+  aiReviewData=null;
   const ld=document.getElementById('ai-review-loading'),ct=document.getElementById('ai-review-content'),vd=document.getElementById('ai-verdict'),af=document.getElementById('ai-autofill-preview');
   if(ld)ld.style.display='flex';if(ct){ct.style.display='none';ct.innerHTML=''}if(vd)vd.style.display='none';if(af)af.style.display='none';
   ['sc-q-val','sc-cx-val','sc-bug-val','sc-st-val'].forEach(id=>{const el=document.getElementById(id);if(el){el.textContent='–';el.style.color=''}});
-  const cxs=cx(code),cxc=cxC(cxs);const cxEl=document.getElementById('sc-cx-val');if(cxEl){cxEl.textContent=cxs;cxEl.style.color=cxc.c}
-  try{
-    const resp=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:apiHeaders(),body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:800,system:'You are a code review expert. Reply ONLY with valid JSON, no markdown blocks.',messages:[{role:'user',content:'Analyze this '+lang+' code. Reply as JSON:\n{"quality":"A/B/C/D/F","bugs":"none/minor/medium/critical","style":"A/B/C/D/F","verdict":"publish/review/fix","verdict_text":"Recommendation (1 sentence)","suggested_description":"What the code does (1-2 sentences)","suggested_tags":["tag1","tag2","tag3"],"strengths":["strength1","strength2"],"issues":["issue1"],"improvements":["improvement1"]}\n\nCode:\n'+code.slice(0,3000)}]})});
-    // ── Safe response parsing ── fixes 'Unexpected end of JSON input'
-    let data;try{data=await resp.json()}catch(e){throw new Error('HTTP '+resp.status+': response is not JSON — check your API key')}
-    if(!resp.ok||data.error){throw new Error((data.error&&(data.error.message||JSON.stringify(data.error)))||('HTTP '+resp.status))}
-    const raw=(data.content||[]).map(c=>c.text||'').join('').trim();
-    if(!raw){throw new Error('API returned empty content')}
-    // Robust JSON extraction: find first { and last } — handles markdown fences too
-    const jsonStart=raw.indexOf('{'),jsonEnd=raw.lastIndexOf('}');
-    if(jsonStart===-1||jsonEnd===-1){throw new Error('No JSON found in response: '+raw.slice(0,120))}
-    const result=JSON.parse(raw.slice(jsonStart,jsonEnd+1));
-    aiReviewData=result;showReviewResult(result);
-  }catch(err){
-    if(ld)ld.style.display='none';
-    if(ct){
-      ct.style.display='block';
-      const isKey=err.message.includes('401')||err.message.includes('authentication')||err.message.includes('api key')||err.message.includes('API key');
-      const hint=isKey
-        ?'→ Your API key looks wrong. Click 🔑 in the nav to update it.'
-        :'→ Check your internet connection and API key (🔑).  You can still publish.';
-      ct.innerHTML='<div style="color:var(--rose);font-weight:600;margin-bottom:.4rem">AI Review failed</div>'
-        +'<div style="font-family:var(--fc);font-size:.7rem;color:#f87171;background:rgba(251,113,133,.08);border:1px solid rgba(251,113,133,.2);border-radius:6px;padding:.5rem .7rem;margin-bottom:.4rem">'+esc(err.message)+'</div>'
-        +'<div style="font-size:.72rem;color:var(--mut)">'+hint+'</div>';
+
+  // ── LOCAL ANALYSIS ENGINE ── runs instantly, no API needed ──
+  setTimeout(()=>{
+    try{
+      const s=cst(code), a=ana(code,lang), cxs=cx(code);
+
+      // ── 1. COMPLEXITY score (already computed) ──
+      const cxc=cxC(cxs);
+      const cxEl=document.getElementById('sc-cx-val');
+      if(cxEl){cxEl.textContent=cxs;cxEl.style.color=cxc.c}
+
+      // ── 2. QUALITY grade ──
+      let q=100;
+      const commentRatio=s.tot>0?s.cm/s.tot:0;
+      if(commentRatio<0.05&&s.tot>10)q-=12;   // very few comments
+      if(s.al>120)q-=10;                        // very long lines
+      if(cxs>80)q-=25;                          // very high complexity
+      else if(cxs>60)q-=12;
+      if(s.uw/Math.max(s.wc,1)<0.3)q-=8;       // low vocabulary diversity
+      if(a.fn.length===0&&s.tot>15)q-=10;       // no functions detected
+      if(s.ne/Math.max(s.tot,1)<0.5)q-=5;       // lots of empty lines
+      const quality=q>=90?'A':q>=75?'B':q>=60?'C':q>=45?'D':'F';
+      const qEl=document.getElementById('sc-q-val');
+      if(qEl){qEl.textContent=quality;qEl.style.color={A:'#4ade80',B:'#86efac',C:'#fbbf24',D:'#fb923c',F:'#f87171'}[quality]}
+
+      // ── 3. BUG detection ──
+      const bugIssues=[];
+      if(lang==='JavaScript'||lang==='TypeScript'){
+        if(/[^=!<>]={1}(?!=)/.test(code)&&!/=>/g.test(code)||/==[^=]/.test(code))
+          bugIssues.push('Possible loose equality (== instead of ===)');
+        if(/var\s+/.test(code))bugIssues.push('var used — prefer const/let');
+        if(/console\.log/.test(code))bugIssues.push('Debug console.log statements found');
+        if(/\/\/\s*(TODO|FIXME|HACK|BUG)/i.test(code))bugIssues.push('TODO/FIXME markers in code');
+        if(/catch\s*\([^)]*\)\s*\{\s*\}/.test(code))bugIssues.push('Empty catch block detected');
+        if(/==[^=]/.test(code))bugIssues.push('Loose equality == found (use ===)');
+      }
+      if(lang==='Python'){
+        if(/except\s*:/.test(code))bugIssues.push('Bare except clause — too broad');
+        if(/print\s*\(/.test(code))bugIssues.push('Debug print() statements found');
+        if(/[^=!<>]=[^=]/.test(code)&&/	/.test(code))bugIssues.push('Mixed tabs/spaces possible');
+      }
+      if(s.tot>5&&s.cm===0)bugIssues.push('No comments — consider documenting');
+      const bugLevel=bugIssues.length===0?'none':bugIssues.length<=1?'minor':bugIssues.length<=3?'medium':'critical';
+      const bm={none:'✓',minor:'!',medium:'!!',critical:'✗'},bc={none:'#4ade80',minor:'#fbbf24',medium:'#fb923c',critical:'#f87171'};
+      const bugEl=document.getElementById('sc-bug-val');
+      if(bugEl){bugEl.textContent=bm[bugLevel];bugEl.style.color=bc[bugLevel]}
+
+      // ── 4. STYLE grade ──
+      let st=100;
+      if(s.al>80)st-=15;
+      if(s.ml>200)st-=10;
+      const hasConsistentIndent=/^(    |	)/m.test(code)||/^  /m.test(code);
+      if(!hasConsistentIndent&&s.tot>5)st-=10;
+      if(/[a-z][A-Z]/.test(code)||/[a-z]_[a-z]/.test(code))st+=5; // naming convention present
+      const style=st>=90?'A':st>=75?'B':st>=60?'C':st>=45?'D':'F';
+      const stEl=document.getElementById('sc-st-val');
+      if(stEl){stEl.textContent=style;stEl.style.color={A:'#4ade80',B:'#86efac',C:'#fbbf24',D:'#fb923c',F:'#f87171'}[style]}
+
+      // ── 5. VERDICT ──
+      const issues=bugIssues.length,grade=[quality,style];
+      let verdict='publish';
+      if(issues>=3||grade.includes('F'))verdict='fix';
+      else if(issues>=1||grade.includes('D')||cxs>75)verdict='review';
+
+      const verdictText=verdict==='publish'
+        ?'Code looks solid — ready to publish to your gallery.'
+        :verdict==='review'
+        ?'A few minor issues worth addressing before publishing.'
+        :'Several issues detected — consider fixing them first.';
+
+      // ── 6. STRENGTHS & IMPROVEMENTS ──
+      const strengths=[];
+      if(quality==='A'||quality==='B')strengths.push('Clean, well-structured code');
+      if(commentRatio>0.15)strengths.push('Good code documentation');
+      if(a.fn.length>0)strengths.push(`${a.fn.length} function${a.fn.length>1?'s':''} properly defined`);
+      if(a.cl.length>0)strengths.push(`${a.cl.length} class${a.cl.length>1?'es':''} detected`);
+      if(cxs<30)strengths.push('Low complexity — easy to understand');
+      if(bugIssues.length===0)strengths.push('No obvious bugs detected');
+      if(strengths.length===0)strengths.push('Code is functional');
+
+      const improvements=[];
+      if(commentRatio<0.05&&s.tot>8)improvements.push('Add comments to explain key logic');
+      if(cxs>60)improvements.push('Consider breaking down complex functions');
+      if(s.al>80)improvements.push('Shorten long lines (aim for < 80 chars)');
+      if(a.fn.length===0&&s.tot>15)improvements.push('Extract repeated logic into named functions');
+      improvements.push(...bugIssues.slice(0,2));
+      if(improvements.length===0)improvements.push('Good overall — minor style tweaks possible');
+
+      // ── 7. AUTO-FILL description & tags ──
+      const kwMap={
+        fibonacci:'recursive algorithm computing the Fibonacci sequence',
+        sort:'sorting algorithm for ordering data',
+        search:'search algorithm for finding elements',
+        hash:'hash map / dictionary data structure',
+        tree:'tree data structure implementation',
+        graph:'graph traversal algorithm',
+        neural:'neural network layer implementation',
+        canvas:'interactive canvas animation',
+        fetch:'data fetching and HTTP requests',
+        class:'object-oriented class implementation',
+        async:'asynchronous operations with async/await',
+        react:'React component',
+        css:'CSS styles and visual design',
+        html:'HTML page structure',
+      };
+      let autoDesc='';
+      const codeLow=code.toLowerCase();
+      for(const[kw,desc]of Object.entries(kwMap)){if(codeLow.includes(kw)){autoDesc=`A ${lang} implementation of a ${desc}.`;break}}
+      if(!autoDesc){
+        if(a.cl.length>0)autoDesc=`A ${lang} ${a.cl[0].n} class with ${a.fn.length} method${a.fn.length!==1?'s':''}.`;
+        else if(a.fn.length>0)autoDesc=`A ${lang} module with ${a.fn.length} function${a.fn.length!==1?'s':''} (${a.fn.slice(0,2).map(f=>f.n).join(', ')}${a.fn.length>2?'…':''}).`;
+        else autoDesc=`A ${lang} code snippet (${s.tot} lines, complexity ${cxs}).`;
+      }
+
+      const autoTags=[];
+      if(/(sort|quicksort|mergesort|heapsort)/i.test(code))autoTags.push('sorting');
+      if(/(recursion|recursive|fibonacci)/i.test(code))autoTags.push('recursion');
+      if(/(canvas|animation|requestAnimationFrame)/i.test(code))autoTags.push('animation');
+      if(/(class|extends|prototype)/i.test(code))autoTags.push('oop');
+      if(/(async|await|promise|fetch)/i.test(code))autoTags.push('async');
+      if(/(map|filter|reduce)/i.test(code))autoTags.push('functional');
+      if(/(neural|layer|backprop|gradient)/i.test(code))autoTags.push('ml');
+      if(/(graph|node|edge|tree)/i.test(code))autoTags.push('data-structures');
+      autoTags.push(lang.toLowerCase());
+      const uniqueTags=[...new Set(autoTags)].slice(0,4);
+
+      // ── Build result object (same shape as API response) ──
+      const result={
+        quality,bugs:bugLevel,style,verdict,verdict_text:verdictText,
+        suggested_description:autoDesc,
+        suggested_tags:uniqueTags,
+        strengths:strengths.slice(0,3),
+        issues:bugIssues.slice(0,3),
+        improvements:improvements.slice(0,3),
+        _local:true
+      };
+      aiReviewData=result;
+      showReviewResult(result);
+      toast('Analysis complete ✦','ok');
+    }catch(err){
+      if(ld)ld.style.display='none';
+  // Show local badge if not from API
+  const localBadge=document.getElementById('local-analysis-badge');
+  if(localBadge)localBadge.style.display=r._local?'inline-flex':'none';
+      if(ct){ct.style.display='block';ct.innerHTML='<div style="color:var(--rose)">Analysis error: '+esc(err.message)+'</div>'}
+      toast('Analysis failed','err');
     }
-    toast('AI failed: '+err.message.slice(0,50),'err');
-  }
+  }, 600); // small delay so the loading spinner shows
 }
 function showReviewResult(r){
   const ld=document.getElementById('ai-review-loading'),ct=document.getElementById('ai-review-content'),vd=document.getElementById('ai-verdict'),af=document.getElementById('ai-autofill-preview');if(ld)ld.style.display='none';
@@ -938,12 +1746,296 @@ function doDel(){if(!pDel)return;P=P.filter(p=>p.id!==pDel);save();hideModal('co
 function showModal(id){document.getElementById(id).classList.add('on')}
 function hideModal(id){document.getElementById(id).classList.remove('on')}
 function toast(msg,type='ok'){const el=document.createElement('div');el.className='toast t-'+type;el.textContent=msg;document.getElementById('toasts').appendChild(el);setTimeout(()=>{el.style.opacity='0';el.style.transform='translateX(10px)';setTimeout(()=>el.remove(),300)},2700)}
-function openApiKeyModal(){
-  const inp=document.getElementById('apikey-input');
-  if(inp){const k=getApiKey();inp.value=k?k.slice(0,8)+'…':'';inp.placeholder='sk-ant-…';}
-  showModal('apikey-modal');
-  setTimeout(()=>{const inp=document.getElementById('apikey-input');if(inp&&!getApiKey())inp.focus();},100);
+// ══════════════════════════════════════════
+// EXPORT AS READ-ONLY HTML GALLERY
+// ══════════════════════════════════════════
+function exportHTML(){
+  const sorted=getSorted(P);
+  const dataJSON=JSON.stringify({P:sorted,C},null,2);
+  const dataB64=btoa(unescape(encodeURIComponent(dataJSON)));
+
+  const cards=sorted.map((p,idx)=>{
+    const lc=LC[p.language]||'#888';
+    const cxs=cx(p.code);
+    const cc=cxC(cxs);
+    const coll=C.find(c=>c.id===p.collId);
+    const live=isLivable(p);
+    const tags=(p.tags||[]).slice(0,3).map(t=>'<span class="ro-tag">'+esc(t)+'</span>').join('');
+    return '<div class="ro-card" data-id="'+p.id+'" onclick="openDetail(\''+p.id+'\')" style="animation-delay:'+Math.min(idx*.04,.5)+'s">'
+      +(live
+        ?'<div class="ro-live" id="lw-'+p.id+'"><div class="ro-spin-wrap"><div class="ro-spin"></div></div></div>'
+        :'<canvas class="ro-cv" id="cv-'+p.id+'" width="600" height="450"></canvas>')
+      +'<div class="ro-glow" style="background:linear-gradient(90deg,transparent,'+p.accentColor+',transparent);box-shadow:0 0 14px '+p.accentColor+'80"></div>'
+      +'<div class="ro-lbl"><div class="ro-lname">'+esc(p.name)+'</div>'
+      +'<div class="ro-lmeta"><span style="color:'+lc+'">'+p.language+'</span><span style="opacity:.3;margin:0 .3rem">·</span><span style="color:'+cc.c+'">CX '+cxs+'</span>'+(p.starred?'<span style="margin-left:.3rem;color:#fbbf24">★</span>':'')+'</div></div>'
+      +'</div>';
+  }).join('');
+
+  // ── Build exported HTML in parts (no single giant string) ──────
+  const htmlHead = [
+    '<!DOCTYPE html>',
+    '<html lang="en">',
+    '<head>',
+    '<meta charset="UTF-8">',
+    '<meta name="viewport" content="width=device-width,initial-scale=1">',
+    '<title>CODEX Gallery — Export</title>',
+    '<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@300;400;500&family=Syne:wght@600;700;800&display=swap" rel="stylesheet">',
+    '<style>',
+    ':root{--bg1:#03071a;--bg2:#060d20;--bdr:rgba(255,255,255,.06);--txt:#f1f5f9;--txt2:#94a3b8;--mut:#475569;--mut2:#64748b;--blue:#3b82f6;--purple:#a855f7;--green:#4ade80;--amber:#fbbf24;--fi:Inter,system-ui,sans-serif;--fd:\'Syne\',Inter,sans-serif;--fc:\'JetBrains Mono\',monospace}',
+    '*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}',
+    'body{background:var(--bg1);color:var(--txt);font-family:var(--fi);min-height:100vh;-webkit-font-smoothing:antialiased;overflow-x:hidden}',
+    '::-webkit-scrollbar{width:4px}::-webkit-scrollbar-thumb{background:rgba(255,255,255,.08);border-radius:4px}',
+    '.ro-nav{position:sticky;top:0;z-index:100;height:56px;display:flex;align-items:center;justify-content:space-between;padding:0 2rem;background:rgba(3,7,26,.92);backdrop-filter:blur(20px);border-bottom:1px solid var(--bdr)}',
+    '.ro-nav::after{content:\'\';position:absolute;bottom:0;left:15%;right:15%;height:1px;background:linear-gradient(90deg,transparent,rgba(59,130,246,.4),rgba(168,85,247,.4),transparent)}',
+    '.ro-logo{font-family:var(--fd);font-size:1.25rem;font-weight:800;letter-spacing:.15em;background:linear-gradient(135deg,#fff,#93c5fd,#c4b5fd);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}',
+    '.ro-badge{font-size:.6rem;padding:.16rem .55rem;border-radius:99px;border:1px solid rgba(168,85,247,.35);color:#c4b5fd;background:rgba(168,85,247,.08)}',
+    '.ro-btn{display:inline-flex;align-items:center;gap:.28rem;padding:.28rem .7rem;border-radius:8px;border:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.03);color:var(--txt2);font-family:var(--fi);font-size:.71rem;cursor:pointer;transition:all .18s}',
+    '.ro-btn:hover{border-color:rgba(59,130,246,.4);color:var(--txt);background:rgba(59,130,246,.07)}',
+    '.ro-main{padding:2rem 2rem 4rem}',
+    '.ro-head{display:flex;align-items:center;gap:.8rem;margin-bottom:1.6rem}',
+    '.ro-title{font-family:var(--fd);font-size:1.4rem;font-weight:700}',
+    '.ro-hr{flex:1;height:1px;background:linear-gradient(90deg,rgba(255,255,255,.08),transparent)}',
+    '.ro-cnt{font-size:.62rem;color:var(--mut)}',
+    '.ro-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:1.5rem}',
+    '.ro-card{border-radius:16px;overflow:hidden;cursor:pointer;position:relative;aspect-ratio:4/3;background:#000;border:1px solid rgba(255,255,255,.06);transition:transform .3s cubic-bezier(.34,1.2,.64,1),border-color .3s,box-shadow .3s;animation:cIn .4s both;box-shadow:0 4px 20px rgba(0,0,0,.5)}',
+    '.ro-card:hover{transform:translateY(-8px) scale(1.02);border-color:rgba(255,255,255,.18);box-shadow:0 32px 60px -8px rgba(0,0,0,.8)}',
+    '@keyframes cIn{from{opacity:0;transform:translateY(14px) scale(.95)}to{opacity:1;transform:none}}',
+    '.ro-cv{position:absolute;inset:0;width:100%;height:100%;display:block;image-rendering:pixelated}',
+    '.ro-live{position:absolute;inset:0;overflow:hidden;background:#000}',
+    '.ro-live iframe{position:absolute;inset:0;width:100%;height:100%;border:none;pointer-events:none;opacity:0;transition:opacity .6s}',
+    '.ro-spin-wrap{position:absolute;inset:0;display:flex;align-items:center;justify-content:center}',
+    '.ro-spin{width:18px;height:18px;border:2px solid rgba(255,255,255,.07);border-top-color:var(--green);border-radius:50%;animation:spin .8s linear infinite}',
+    '@keyframes spin{to{transform:rotate(360deg)}}',
+    '.ro-glow{position:absolute;top:0;left:0;right:0;height:3px;z-index:4}',
+    '.ro-lbl{position:absolute;bottom:0;left:0;right:0;z-index:5;padding:.6rem .9rem .5rem;background:linear-gradient(to top,rgba(0,0,0,.92),transparent)}',
+    '.ro-lname{font-family:var(--fd);font-size:.92rem;font-weight:700;color:rgba(255,255,255,.92);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-shadow:0 1px 6px rgba(0,0,0,.8)}',
+    '.ro-lmeta{font-family:var(--fc);font-size:.56rem;color:rgba(255,255,255,.48);margin-top:.07rem}',
+    '.ro-tag{font-size:.56rem;color:rgba(255,255,255,.6);background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.1);padding:.04rem .28rem;border-radius:99px;font-family:var(--fc)}',
+    '.ro-ov{position:fixed;inset:0;z-index:300;background:rgba(0,0,0,.92);backdrop-filter:blur(16px);display:none}',
+    '.ro-det{position:absolute;inset:0;display:flex;flex-direction:column;max-width:1200px;width:100%;margin:0 auto;background:var(--bg2);border-left:1px solid var(--bdr);border-right:1px solid var(--bdr)}',
+    '.ro-dh{display:flex;align-items:flex-start;justify-content:space-between;padding:1rem 1.6rem .8rem;border-bottom:1px solid var(--bdr);background:rgba(3,7,26,.7);flex-shrink:0;position:relative;gap:1rem;overflow:hidden}',
+    '.ro-dh::before{content:\'\';position:absolute;bottom:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(59,130,246,.4),rgba(168,85,247,.4),transparent)}',
+    '.ro-dname{font-family:var(--fd);font-size:1.65rem;font-weight:700;background:linear-gradient(135deg,#fff,#94a3b8);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:.2rem}',
+    '.ro-ddesc{font-size:.74rem;color:var(--txt2);line-height:1.55;max-width:520px}',
+    '.ro-tabs{display:flex;border-bottom:1px solid var(--bdr);padding:0 1.6rem;background:rgba(3,7,26,.5);flex-shrink:0;overflow-x:auto;-ms-overflow-style:none;scrollbar-width:none}',
+    '.ro-tabs::-webkit-scrollbar{display:none}',
+    '.ro-tab{padding:.5rem .75rem .44rem;font-size:.7rem;color:var(--mut2);cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px;transition:all .18s;white-space:nowrap}',
+    '.ro-tab:hover{color:var(--txt2)}',
+    '.ro-tab.on{color:var(--txt);border-bottom-color:var(--blue)}',
+    '.ro-body{flex:1;overflow:hidden;display:flex}',
+    '.ro-panel{display:none;flex:1;overflow:auto;flex-direction:column}',
+    '.ro-panel.on{display:flex}',
+    '.ro-pvc{flex:1;overflow:auto;display:flex;align-items:center;justify-content:center;background:#000;position:relative}',
+    '.ro-pvc iframe{width:100%;height:100%;border:none}',
+    '.ro-pvc canvas{max-width:90%;max-height:86%;border:1px solid rgba(255,255,255,.07);border-radius:10px}',
+    '.ro-fsb{position:absolute;top:10px;right:10px;z-index:10;background:rgba(0,0,0,.7);border:1px solid rgba(255,255,255,.08);border-radius:6px;padding:.22rem .46rem;font-size:.6rem;color:var(--mut2);cursor:pointer;backdrop-filter:blur(8px)}',
+    '.ro-fsb:hover{color:var(--txt);border-color:rgba(59,130,246,.4)}',
+    '.ro-cbar{display:flex;align-items:center;gap:.5rem;padding:.4rem .85rem;border-bottom:1px solid var(--bdr);background:rgba(3,7,26,.8);flex-shrink:0}',
+    '.ro-fn{font-family:var(--fc);font-size:.63rem;color:var(--mut2);flex:1}',
+    '.ro-cw{flex:1;overflow:auto;padding:0;font-family:var(--fc);font-size:.72rem;line-height:1;color:#cdd6f4}',
+    '.ro-cl{display:flex;align-items:stretch;transition:background .1s;min-width:max-content}',
+    '.ro-cl:hover{background:rgba(59,130,246,.05)}',
+    '.ro-ln{color:rgba(71,85,105,.45);user-select:none;min-width:2.4rem;padding:.18rem .6rem .18rem 0;text-align:right;font-size:.67rem;flex-shrink:0;font-variant-numeric:tabular-nums;border-right:1px solid rgba(255,255,255,.05);margin-right:.6rem}',
+    '.ro-lc{flex:1;white-space:pre;padding:.18rem 0;overflow:visible}',
+    '.ro-sb{width:188px;flex-shrink:0;border-right:1px solid var(--bdr);overflow-y:auto;padding:.9rem;background:rgba(0,0,0,.2)}',
+    '.ro-sbl{font-size:.53rem;text-transform:uppercase;letter-spacing:.16em;color:var(--mut);margin-bottom:.35rem;margin-top:.88rem;font-weight:500}',
+    '.ro-sbl:first-child{margin-top:0}',
+    '.ro-sbi{display:flex;justify-content:space-between;font-size:.66rem;color:var(--txt2);margin-bottom:.14rem}',
+    '.ro-sbi span:last-child{color:var(--txt);font-family:var(--fc);font-size:.6rem}',
+    '.ro-cxb{height:3px;background:rgba(255,255,255,.06);border-radius:2px;overflow:hidden;margin:.18rem 0 .5rem}',
+    '.ro-cxf{height:100%;border-radius:2px}',
+    '.ro-ai-body{flex:1;overflow:auto;padding:1.2rem 1.4rem 3rem;font-size:.74rem;line-height:1.7;color:var(--txt2)}',
+    '.ro-fsov{position:fixed;inset:0;z-index:600;background:#000;display:none;flex-direction:column}',
+    '.ro-fsov.on{display:flex}',
+    '.ro-fsh{display:flex;align-items:center;justify-content:space-between;padding:.48rem 1rem;border-bottom:1px solid var(--bdr);background:rgba(3,7,26,.95);flex-shrink:0}',
+    '.ro-fsbdy{flex:1;overflow:hidden}',
+    '.ro-fsbdy iframe,.ro-fsbdy canvas{width:100%;height:100%;border:none;display:block}',
+    '.ro-toast{position:fixed;bottom:1.2rem;right:1.2rem;z-index:999;padding:.42rem .88rem;border-radius:8px;font-size:.7rem;border:1px solid rgba(74,222,128,.2);color:var(--green);background:rgba(0,14,9,.95);backdrop-filter:blur(16px);opacity:0;transform:translateX(10px);transition:all .25s;pointer-events:none}',
+    '.ro-toast.show{opacity:1;transform:none}',
+    '.s-kw{color:#c792ea}.s-str{color:#c3e88d}.s-cmt{color:#4a5568;font-style:italic}.s-num{color:#f78c6c}.s-fn{color:#82aaff}.s-cls{color:#ffcb6b}',
+    '@media(max-width:680px){.ro-nav,.ro-main{padding-left:1rem;padding-right:1rem}.ro-grid{grid-template-columns:1fr}.ro-sb{display:none}}',
+    '</style>',
+    '</head>',
+    '<body>'
+  ].join('\n');
+
+  const htmlNav = [
+    '<nav class="ro-nav">',
+    '  <div style="display:flex;align-items:center;gap:.6rem"><span class="ro-logo">CODEX</span><span class="ro-badge">View Only</span></div>',
+    '  <div style="display:flex;align-items:center;gap:.5rem">',
+    '    <span style="font-size:.61rem;color:var(--mut)">'+sorted.length+' project'+(sorted.length!==1?'s':'')+' \xb7 '+new Date().toLocaleDateString('en',{day:'numeric',month:'short',year:'numeric'})+'</span>',
+    '  </div>',
+    '</nav>'
+  ].join('\n');
+
+  const htmlGallery = [
+    '<main class="ro-main">',
+    '  <div class="ro-head"><span class="ro-title">Gallery</span><div class="ro-hr"></div><span class="ro-cnt">'+sorted.length+' works</span></div>',
+    '  <div class="ro-grid">'+cards+'</div>',
+    '</main>'
+  ].join('\n');
+
+  const htmlOverlay = [
+    '<div class="ro-ov" id="roOv" onclick="if(event.target===this)closeDetail()">',
+    '  <div class="ro-det">',
+    '    <div class="ro-dh">',
+    '      <div style="flex:1;min-width:0">',
+    '        <div style="display:flex;align-items:center;gap:.4rem;margin-bottom:.38rem" id="roMeta"></div>',
+    '        <div class="ro-dname" id="roDname"></div>',
+    '        <div class="ro-ddesc" id="roDdesc"></div>',
+    '      </div>',
+    '      <button class="ro-btn" onclick="closeDetail()">&#x2715;</button>',
+    '    </div>',
+    '    <div class="ro-tabs">',
+    '      <div class="ro-tab on" onclick="setROTab(\'prev\')" id="rt-prev">&#x25C9; Preview</div>',
+    '      <div class="ro-tab" onclick="setROTab(\'code\')" id="rt-code">&#x2325; Code</div>',
+    '      <div class="ro-tab" onclick="setROTab(\'ai\')" id="rt-ai">&#x26A1; AI Analysis</div>',
+    '    </div>',
+    '    <div class="ro-body">',
+    '      <div class="ro-sb" id="roSb"></div>',
+    '      <div class="ro-panel on" id="rp-prev"><div class="ro-pvc" id="roPvc"><button class="ro-fsb" onclick="openROFs()">&#x26F6;</button></div></div>',
+    '      <div class="ro-panel" id="rp-code">',
+    '        <div class="ro-cbar"><span class="ro-fn" id="roFn"></span><button class="ro-btn" onclick="copyROCode()">&#x2398; Copy</button><button class="ro-btn" onclick="dlROCode()">&#x2193; Download</button></div>',
+    '        <div class="ro-cw" id="roCode"></div>',
+    '      </div>',
+    '      <div class="ro-panel" id="rp-ai"><div class="ro-ai-body" id="roAI"></div></div>',
+    '    </div>',
+    '  </div>',
+    '</div>'
+  ].join('\n');
+
+  const htmlFsOv = [
+    '<div class="ro-fsov" id="roFsOv">',
+    '  <div class="ro-fsh"><span style="font-family:var(--fd);font-size:.88rem;font-weight:700;color:var(--txt)" id="roFsT"></span><button class="ro-btn" onclick="closeROFs()">&#x2715; Close</button></div>',
+    '  <div class="ro-fsbdy" id="roFsB"></div>',
+    '</div>',
+    '<div class="ro-toast" id="roToast"></div>'
+  ].join('\n');
+
+  // ── Exported JS (template literal, backtick-safe) ──────────────
+  const exportedJS = `<script>
+const RAW=atob('`+dataB64+`');
+const {P,C}=JSON.parse(decodeURIComponent(escape(RAW)));
+const LC={JavaScript:'#f7df1e',TypeScript:'#3178c6',Python:'#3776ab',Rust:'#ce422b',Go:'#00add8',CSS:'#264de4',HTML:'#e34c26','C++':'#00599c',Java:'#007396',SQL:'#fbbf24',Shell:'#4ade80',Other:'#a855f7'};
+const EXT={JavaScript:'script.js',TypeScript:'module.ts',Python:'main.py',Rust:'main.rs',Go:'main.go',CSS:'styles.css',HTML:'index.html','C++':'main.cpp',Java:'Main.java',SQL:'query.sql',Shell:'run.sh',Other:'code.txt'};
+let curP=null,roTab='prev';
+function cx(code){let s=0;const ls=code.split('\\n'),n=ls.length;if(n>10)s+=8;if(n>30)s+=10;if(n>80)s+=14;const md=ls.reduce((m,l)=>{const d=(l.match(/[{([]|if\\s*\\(|for\\s*\\(|while\\s*\\(/g)||[]).length;return Math.max(m,d)},0);s+=Math.min(md*7,22);['if','else','for','while','switch','try','catch','class','async','await'].forEach(k=>{if(new RegExp('\\\\b'+k+'\\\\b').test(code))s+=2});s+=Math.min((code.match(/&&|\\|\\||=>|\\?\\./g)||[]).length*1.5,15);return Math.min(Math.round(s),100)}
+function cxC(n){if(n<30)return{c:'#4ade80',l:'Simple'};if(n<60)return{c:'#fbbf24',l:'Medium'};if(n<80)return{c:'#fb923c',l:'Complex'};return{c:'#fb7185',l:'High'}}
+function cst(code){const ls=code.split('\\n'),w=code.match(/\\b\\w+\\b/g)||[];return{tot:ls.length,ne:ls.filter(l=>l.trim()).length,cm:ls.filter(l=>/^\\s*(\\/\\/|#|\\/\\*)/.test(l)).length,ch:code.length}}
+function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}
+function hlCode(code,lang){
+  let h=code.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  const KW={JavaScript:/\\b(function|const|let|var|return|if|else|for|of|in|while|do|class|extends|import|export|from|default|async|await|new|this|typeof|true|false|null|undefined|void|try|catch|finally|throw|switch|case|break|continue)\\b/g,TypeScript:/\\b(function|const|let|var|return|if|else|for|of|in|while|do|class|extends|import|export|from|default|async|await|new|this|type|interface|enum|abstract|static|public|private|protected|readonly)\\b/g,Python:/\\b(def|class|return|if|elif|else|for|while|import|from|as|with|pass|True|False|None|self|lambda|yield|raise|try|except|finally|and|or|not|in|is|async|await)\\b/g,Rust:/\\b(fn|let|mut|const|struct|enum|impl|trait|use|pub|return|if|else|for|in|while|loop|match|true|false|None|Some|Ok|Err|self|async|await)\\b/g,Go:/\\b(func|var|const|type|struct|interface|package|import|return|if|else|for|range|switch|case|default|go|defer|nil|true|false|make|new|len|append)\\b/g};
+  const kw=KW[lang]||KW.JavaScript;
+  h=h.replace(/(\\\\S+\\/\\/[^\\n]*|\\/\\*[\\s\\S]*?\\*\\/|#[^\\n]*)/g,m=>'<span class="s-cmt">'+m+'</span>');
+  h=h.replace(/(?<![a-zA-Z_])\\b(\\d+\\.?\\d*)\\b/g,'<span class="s-num">$1</span>');
+  h=h.replace(kw,'<span class="s-kw">$1</span>');
+  h=h.replace(/(["'\`])(?:(?!\\1)[^\\\\]|\\\\.)*\\1/g,m=>'<span class="s-str">'+m+'</span>');
+  h=h.replace(/\\b(\\w+)(?=\\s*\\()/g,(m,n)=>{const k=['if','for','while','switch','catch','function','return','new','class','async','await','def'];return k.includes(n)?m:'<span class="s-fn">'+n+'</span>'});
+  return h;
 }
+function drawThumb(canvas,p){
+  const ctx=canvas.getContext('2d'),W=canvas.width,H=canvas.height,ac=p.accentColor||'#3b82f6';
+  const r2=parseInt(ac.slice(1,3),16),g2=parseInt(ac.slice(3,5),16),b2=parseInt(ac.slice(5,7),16);
+  const bg=ctx.createLinearGradient(0,0,W,H);bg.addColorStop(0,'#000');bg.addColorStop(.5,'rgb('+Math.round(r2*.06)+','+Math.round(g2*.06)+','+Math.round(b2*.06)+')');bg.addColorStop(1,'#000');ctx.fillStyle=bg;ctx.fillRect(0,0,W,H);
+  const PX=6,cols=Math.ceil(W/PX),rows=Math.ceil(H/PX),lines=p.code.split('\\n'),total=Math.max(lines.length,1);
+  lines.forEach((line,li)=>{const t=line.trim();if(!t)return;const rowY=Math.floor((li/total)*rows);if(rowY>=rows)return;
+    const isFn=/\\b(function|def|class|fn|func)\\b/.test(t),isKw=/\\b(const|let|return|if|for)\\b/.test(t);
+    let col=ac,alpha=isFn?0.85:isKw?0.38:/^\\s*(\\/\\/|#)/.test(t)?0.1:0.14;
+    const indent=line.search(/\\S/),sc=Math.floor((indent/4)*1.5),ec=Math.min(sc+Math.floor((Math.min(t.length,70)/70)*cols),cols);
+    if(isFn){ctx.shadowColor=ac;ctx.shadowBlur=PX*1.5}ctx.fillStyle=col+Math.round(alpha*255).toString(16).padStart(2,'0');ctx.fillRect(sc*PX,rowY*PX,(ec-sc)*PX-1,PX-1);ctx.shadowBlur=0;
+  });
+  for(let y=0;y<H;y+=2){ctx.fillStyle='rgba(0,0,0,.07)';ctx.fillRect(0,y,W,1)}
+  const tg=ctx.createLinearGradient(0,0,W,0);tg.addColorStop(0,'transparent');tg.addColorStop(.5,ac);tg.addColorStop(1,'transparent');ctx.shadowColor=ac;ctx.shadowBlur=6;ctx.fillStyle=tg;ctx.fillRect(0,0,W,2.5);ctx.shadowBlur=0;
+  const grd=ctx.createLinearGradient(0,H*.4,0,H);grd.addColorStop(0,'transparent');grd.addColorStop(1,'rgba('+r2+','+g2+','+b2+',.2)');ctx.fillStyle=grd;ctx.fillRect(0,0,W,H);
+  const vig=ctx.createRadialGradient(W/2,H/2,H*.2,W/2,H/2,H*.85);vig.addColorStop(0,'transparent');vig.addColorStop(1,'rgba(0,0,0,.5)');ctx.fillStyle=vig;ctx.fillRect(0,0,W,H);
+  const cxs=cx(p.code),cc=cxC(cxs);ctx.fillStyle=cc.c+'50';ctx.fillRect(PX,H-PX*2,W*.3,PX-1);ctx.fillStyle=cc.c+'AA';ctx.fillRect(PX,H-PX*2,(cxs/100)*W*.3,PX-1);
+}
+function isLivable(p){if(p.language==='HTML'||p.language==='CSS')return true;if(p.language==='JavaScript'&&(p.code.includes('canvas')||p.code.includes('requestAnimationFrame')||p.code.includes('setInterval')))return true;return false}
+function buildSrcdoc(p){
+  const safe=p.code.replace(/<\\/script>/gi,'<\\\\/script>');
+  if(p.language==='HTML'||/<!DOCTYPE|<html\\b/i.test(p.code.slice(0,300))){if(/<!DOCTYPE|<html\\b/i.test(p.code.slice(0,300)))return p.code;return '<!DOCTYPE html><html><head><meta charset="UTF-8"><style>*{margin:0;padding:0;box-sizing:border-box}html,body{width:100%;height:100%;overflow:hidden;font-family:system-ui}</style></head><body>'+p.code+'</body></html>';}
+  if(p.language==='CSS'){const sels=[...new Set((p.code.match(/\\.([a-zA-Z][\\w-]*)/g)||[]).map(c=>c.slice(1)))];const body=sels.length>0?sels.slice(0,3).map(c=>'<div class="'+c+'"></div>').join(''):'<div></div>';const safeCss=p.code.replace(/<\\/style>/gi,'<\\\\/style>');return '<!DOCTYPE html><html><head><meta charset="UTF-8"><style>*{box-sizing:border-box;margin:0;padding:0}html,body{width:100%;height:100%;overflow:hidden;display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:1.5rem;padding:1.5rem}'+safeCss+'</style></head><body>'+body+'</body></html>';}
+  if(p.code.includes('canvas')||p.code.includes('requestAnimationFrame'))return '<!DOCTYPE html><html><head><meta charset="UTF-8"><style>*{margin:0;padding:0;box-sizing:border-box}html,body{width:100%;height:100%;overflow:hidden;background:#000}canvas{display:block;width:100%!important;height:100%!important}</style></head><body><canvas></canvas><script>'+safe+'<\\/script></body></html>';
+  return '<!DOCTYPE html><html><head><meta charset="UTF-8"><style>*{box-sizing:border-box;margin:0}body{background:#020817;color:#cdd6f4;font-family:monospace;font-size:11px;padding:.75rem;overflow:hidden}#out{line-height:1.6}.ok{color:#4ade80}.err{color:#f87171}</style></head><body><div id="out"></div><script>var out=document.getElementById("out");function add(c,t){var d=document.createElement("div");d.className=c;d.textContent=t;out.appendChild(d)}var ol=console.log;console.log=function(){ol.apply(console,arguments);add("ok",Array.from(arguments).map(function(x){return typeof x==="object"?JSON.stringify(x):String(x)}).join(" "))};try{(function(){'+safe+'})()}catch(e){add("err",e.message)}<\\/script></body></html>';
+}
+const obs=new IntersectionObserver(entries=>{entries.forEach(e=>{if(!e.isIntersecting)return;const el=e.target,pid=el.closest('[data-id]')?.dataset.id,p=P.find(x=>x.id===pid);if(!p)return;if(el.classList.contains('ro-live')){if(el.dataset.loaded)return;el.dataset.loaded='1';const ph=el.querySelector('.ro-spin-wrap');const ifr=document.createElement('iframe');ifr.sandbox='allow-scripts';ifr.style.cssText='position:absolute;inset:0;width:100%;height:100%;border:none;pointer-events:none;opacity:0;transition:opacity .6s';ifr.onload=()=>{ifr.style.opacity='1';if(ph)ph.style.display='none'};ifr.srcdoc=buildSrcdoc(p);el.appendChild(ifr)}else if(el.classList.contains('ro-cv')){if(el.dataset.drawn)return;el.dataset.drawn='1';drawThumb(el,p)}obs.unobserve(el)})},{rootMargin:'100px',threshold:0.01});
+document.querySelectorAll('.ro-cv,.ro-live').forEach(el=>obs.observe(el));
+function openDetail(id){const p=P.find(x=>x.id===id);if(!p)return;curP=p;const lc=LC[p.language]||'#888',cxs=cx(p.code),cc=cxC(cxs),s=cst(p.code),coll=C.find(c=>c.id===p.collId);document.getElementById('roDname').textContent=p.name;document.getElementById('roDdesc').textContent=p.description||'';
+document.getElementById('roMeta').innerHTML='<span style="width:22px;height:3px;border-radius:2px;background:'+p.accentColor+';display:inline-block"></span><span style="font-family:var(--fc);font-size:.59rem;padding:.07rem .36rem;border-radius:99px;border:1px solid;color:'+lc+';border-color:'+lc+'28;background:'+lc+'0D">'+p.language+'</span><span style="font-family:var(--fc);font-size:.59rem;padding:.07rem .3rem;border-radius:4px;border:1px solid rgba(255,255,255,.08);color:'+cc.c+'">CX '+cxs+' \xb7 '+cc.l+'</span>'+(p.starred?'<span style="color:#fbbf24">\u2605</span>':'')+''
+;document.getElementById('roFn').textContent=EXT[p.language]||'code.txt';
+let sb='<div class="ro-sbl">Language</div><div class="ro-sbi"><span>'+p.language+'</span></div>';
+if(coll)sb+='<div class="ro-sbl">Collection</div><div class="ro-sbi"><span style="display:flex;align-items:center;gap:.3rem"><span style="width:7px;height:7px;border-radius:50%;background:'+coll.color+'"></span>'+esc(coll.name)+'</span></div>';
+sb+='<div class="ro-sbl">Complexity</div><div style="display:flex;justify-content:space-between;font-size:.63rem;color:var(--txt2);margin-bottom:.14rem"><span style="color:'+cc.c+'">'+cc.l+'</span><span style="font-family:var(--fc);font-size:.58rem;color:'+cc.c+'">'+cxs+'/100</span></div><div class="ro-cxb"><div class="ro-cxf" style="width:'+cxs+'%;background:'+cc.c+'"></div></div>';
+sb+='<div class="ro-sbl">Statistics</div><div class="ro-sbi"><span>Lines</span><span>'+s.tot+'</span></div><div class="ro-sbi"><span>Code</span><span>'+s.ne+'</span></div><div class="ro-sbi"><span>Comments</span><span>'+s.cm+'</span></div>';
+if(p.tags&&p.tags.length)sb+='<div class="ro-sbl">Tags</div><div style="display:flex;flex-wrap:wrap;gap:.18rem">'+p.tags.map(t=>'<span class="ro-tag">'+esc(t)+'</span>').join('')+'</div>';
+document.getElementById('roSb').innerHTML=sb;
+document.getElementById('roCode').innerHTML=hlCode(p.code,p.language).split('\\n').map((l,i)=>'<div class="ro-cl"><span class="ro-ln">'+(i+1)+'</span><span class="ro-lc">'+(l||'&nbsp;')+'</span></div>').join('');
+setROTab('prev');document.getElementById('roOv').style.display='block';document.body.style.overflow='hidden';}
+function closeDetail(){document.getElementById('roOv').style.display='none';document.body.style.overflow='';curP=null}
+function setROTab(t){roTab=t;['prev','code','ai'].forEach(k=>{document.getElementById('rt-'+k).classList.toggle('on',k===t);document.getElementById('rp-'+k).classList.toggle('on',k===t)});if(t==='prev'&&curP)buildROPrev(curP);if(t==='ai'&&curP)buildROAI(curP)}
+function buildROPrev(p){const el=document.getElementById('roPvc');const fb=el.querySelector('.ro-fsb');const fbc=fb?.cloneNode(true);el.innerHTML='';if(fbc){fbc.onclick=openROFs;el.appendChild(fbc);}if(!p)return;if(isLivable(p)){const ifr=document.createElement('iframe');ifr.style.cssText='width:100%;height:100%;border:none';ifr.sandbox='allow-scripts';ifr.srcdoc=buildSrcdoc(p);el.appendChild(ifr)}else{const cv=document.createElement('canvas');const W=Math.min(520,el.clientWidth-40||480),H=Math.round(W*.72);cv.width=W;cv.height=H;cv.style.cssText='max-width:90%;max-height:86%;border:1px solid rgba(255,255,255,.07);border-radius:10px';el.appendChild(cv);drawThumb(cv,p)}}
+function buildROAI(p){
+  const el=document.getElementById('roAI');if(!el)return;
+  const cxs=cx(p.code),cc=cxC(cxs),s=cst(p.code);
+  const lines=p.code.split('\\n');
+  const isJS=['JavaScript','TypeScript'].includes(p.language),isPy=p.language==='Python';
+  const findings=[];
+  lines.forEach((line,i)=>{const n=i+1,t=line.trim();
+    if(isJS){
+      if(/[^!<>=]={2}(?!=)/.test(t)&&!/===/.test(t))findings.push({n,type:'warn',msg:'== instead of ==='});
+      if(/^\\s*var\\s+/.test(line))findings.push({n,type:'info',msg:'var — prefer const/let'});
+      if(/console\\.log/.test(t))findings.push({n,type:'info',msg:'Debug log'});
+      if(/\\beval\\s*\\(/.test(t))findings.push({n,type:'err',msg:'eval() security risk'});
+      if(/document\\.write\\b/.test(t))findings.push({n,type:'err',msg:'document.write deprecated'});
+      if(/catch\\s*\\([^)]*\\)\\s*\\{\\s*\\}/.test(t))findings.push({n,type:'warn',msg:'Empty catch block'});
+    }
+    if(isPy){
+      if(/^\\s*except\\s*:/.test(line))findings.push({n,type:'warn',msg:'Bare except'});
+      if(/\\bprint\\s*\\(/.test(t))findings.push({n,type:'info',msg:'Debug print'});
+    }
+  });
+  const errs=findings.filter(f=>f.type==='err'),warns=findings.filter(f=>f.type==='warn'),infos=findings.filter(f=>f.type==='info');
+  const hasFn=(p.code.match(/\\bfunction\\b|=>\\s*[{(]/g)||[]).length,hasAsync=/\\basync\\b|\\bawait\\b/.test(p.code),hasClass=/\\bclass\\b/.test(p.code);
+  const badge=(col,txt)=>'<span style="display:inline-block;font-size:.58rem;padding:.08rem .35rem;border-radius:4px;background:'+col+'22;color:'+col+';margin:.1rem">'+txt+'</span>';
+  const row2=(l,v)=>'<div style="display:flex;justify-content:space-between;padding:.22rem 0;border-bottom:1px solid rgba(255,255,255,.04);font-size:.69rem"><span style="color:var(--mut2)">'+l+'</span><span style="color:var(--txt);font-family:var(--fc)">'+v+'</span></div>';
+  const sec=t=>'<div style="font-size:.6rem;text-transform:uppercase;letter-spacing:.12em;color:var(--mut);margin:1rem 0 .4rem;font-weight:600">'+t+'</div>';
+  const fi=f=>{const col=f.type==='err'?'#fb7185':f.type==='warn'?'#fbbf24':'#7dd3fc',ico=f.type==='err'?'✗':f.type==='warn'?'⚠':'ℹ';return'<div style="display:flex;gap:.5rem;padding:.3rem .5rem;border-radius:6px;background:'+col+'0D;border:1px solid '+col+'22;margin-bottom:.25rem;font-size:.67rem;align-items:flex-start"><span style="color:'+col+'">'+ico+'</span><div><span style="color:var(--mut2);font-size:.6rem">Line '+f.n+' </span><span style="color:'+col+'">'+esc(f.msg)+'</span></div></div>';};
+  let h='';
+  h+=sec('Complexity Score');
+  h+='<div style="display:flex;align-items:center;gap:.8rem;padding:.65rem .9rem;border-radius:10px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.07);margin-bottom:.5rem"><div style="font-size:2rem;font-weight:800;font-family:var(--fc);color:'+cc.c+'">'+cxs+'</div><div style="flex:1"><div style="font-size:.74rem;color:var(--txt);font-weight:600;margin-bottom:.28rem">'+cc.l+'</div><div style="height:5px;background:rgba(255,255,255,.06);border-radius:3px;overflow:hidden"><div style="height:100%;width:'+cxs+'%;background:'+cc.c+';border-radius:3px"></div></div></div><div style="font-size:.55rem;color:var(--mut)">/100</div></div>';
+  h+=sec('Statistics');h+=row2('Total lines',s.tot)+row2('Code lines',s.ne)+row2('Comments',s.cm)+row2('Characters',s.ch.toLocaleString())+row2('Functions',hasFn);
+  h+=sec('Patterns');h+='<div style="display:flex;flex-wrap:wrap;gap:.25rem;margin-bottom:.4rem">';
+  if(hasAsync)h+=badge('#a78bfa','async/await');if(hasClass)h+=badge('#60a5fa','OOP class');if(hasFn>5)h+=badge('#f472b6','many functions');if(s.cm>s.ne*.2)h+=badge('#fbbf24','well-commented');if(s.tot>100)h+=badge('#94a3b8','+100 lines');
+  h+='</div>';
+  h+=sec('Code Review — '+(findings.length===0?'No issues':''+findings.length+' finding'+(findings.length!==1?'s':'')));
+  if(!findings.length){h+='<div style="padding:.55rem .8rem;border-radius:8px;background:rgba(74,222,128,.06);border:1px solid rgba(74,222,128,.18);color:#4ade80;font-size:.69rem">✅ Clean — no issues detected</div>';}
+  else{if(errs.length){h+='<div style="color:#fb7185;font-size:.6rem;margin:.4rem 0 .2rem;font-weight:600">Errors ('+errs.length+')</div>';errs.forEach(f=>h+=fi(f));}if(warns.length){h+='<div style="color:#fbbf24;font-size:.6rem;margin:.4rem 0 .2rem;font-weight:600">Warnings ('+warns.length+')</div>';warns.forEach(f=>h+=fi(f));}if(infos.length){h+='<div style="color:#7dd3fc;font-size:.6rem;margin:.4rem 0 .2rem;font-weight:600">Info ('+infos.length+')</div>';infos.forEach(f=>h+=fi(f));}}
+  h+='<div style="margin-top:1.4rem;padding:.45rem .7rem;border-radius:6px;background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.05);font-size:.61rem;color:var(--mut)">⚡ Local static analysis · read-only</div>';
+  el.innerHTML=h;
+}
+function openROFs(){if(!curP)return;const b=document.getElementById('roFsB');b.innerHTML='';document.getElementById('roFsT').textContent=curP.name;if(isLivable(curP)){const ifr=document.createElement('iframe');ifr.style.cssText='width:100%;height:100%;border:none';ifr.srcdoc=buildSrcdoc(curP);ifr.sandbox='allow-scripts';b.appendChild(ifr)}else{const cv=document.createElement('canvas');cv.style.cssText='width:100%;height:100%;display:block';cv.width=b.clientWidth||1200;cv.height=b.clientHeight||720;b.appendChild(cv);drawThumb(cv,curP)}document.getElementById('roFsOv').classList.add('on')}
+function closeROFs(){document.getElementById('roFsOv').classList.remove('on')}
+async function copyROCode(){if(!curP)return;try{await navigator.clipboard.writeText(curP.code);toast2('Code copied \u2713')}catch{toast2('Copy failed')}}
+function dlROCode(){if(!curP)return;const blob=new Blob([curP.code],{type:'text/plain'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=EXT[curP.language]||'code.txt';a.click()}
+function toast2(msg){const t=document.getElementById('roToast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),3000)}
+document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeDetail();closeROFs()}});
+<\/script>
+</body>
+</html>`;
+
+  const html = htmlHead+'\n'+htmlNav+'\n'+htmlGallery+'\n'+htmlOverlay+'\n'+htmlFsOv+'\n'+exportedJS;
+
+  const blob=new Blob([html],{type:'text/html'});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');
+  a.href=url;
+  a.download='codex-gallery-'+new Date().toISOString().slice(0,10)+'.html';
+  a.click();
+  URL.revokeObjectURL(url);
+  toast('HTML gallery exported \u2713','ok');
+}
+
 function closeAll(){if(editMode)toggleEdit();closeOv();closeDrw();closeFs();document.getElementById('qp-tooltip').classList.remove('show');['confirm-modal','sc-modal','import-modal','share-modal','coll-modal'].forEach(hideModal)}
 document.addEventListener('keydown',e=>{
   const typing=['INPUT','TEXTAREA','SELECT'].includes(document.activeElement.tagName),ovOpen=document.getElementById('ov').style.display!=='none';
@@ -961,8 +2053,7 @@ document.addEventListener('keydown',e=>{
   if(e.key==='Enter'&&focusIdx>=0){const list=getFilteredList();if(list[focusIdx])openP(list[focusIdx].id)}
 });
 load();updCollSel();render();
-// Show key indicator
-(function(){const btn=document.getElementById('api-key-btn');if(btn)btn.title=getApiKey()?'API Key set ✓ — click to change':'Set Anthropic API Key';})();
+
 </script>
 </body>
 </html>
